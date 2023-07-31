@@ -15,13 +15,12 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @RestController
-//@RequestMapping(path = "/stats")
 @RequiredArgsConstructor
 public class StatisticController {
     private final StatisticService statisticService;
 
     @PostMapping("/hit")
-    public StatisticDto addStatistic(@RequestBody Statistic statistic) {
+    public Statistic addStatistic(@RequestBody Statistic statistic) {
         log.info("adding statistic");
         return statisticService.addStatistic(statistic);
     }

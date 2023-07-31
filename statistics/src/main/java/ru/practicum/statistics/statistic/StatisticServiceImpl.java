@@ -16,30 +16,22 @@ import java.util.stream.Collectors;
 public class StatisticServiceImpl implements StatisticService{
     private final StatisticRepository statisticRepository;
     @Override
-    public StatisticDto addStatistic(Statistic statistic) {
-        return StatsisticMapper.mapToStatisticDto(statisticRepository.save(statistic));
+    public Statistic addStatistic(Statistic statistic) {
+        return statisticRepository.save(statistic);
     }
 
     @Override
     public List<StatisticDtoOut> getStatistics(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
-//        String strStart = start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-//        String strEnd = end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-//
-//        start = LocalDateTime.parse("2020-05-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-//        end = LocalDateTime.parse("2024-05-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
         List<StatisticDtoOut> statistics;
         if (uris.length == 0 && unique) {
             statistics = statisticRepository.findStatisticByTimeAndUniqueIp(start, end);
         } else if (uris.length > 0 && unique) {
-            statistics = statisticRepository.findStatisticByTimeAndUniqueIp(start, end);
+            statistics = statisticRepository.findStatisticByTimeAndUniqueIpAndUris(start, end, uris);
         } else if (uris.length == 0) {
-            statistics = statisticRepository.findStatisticByTimeAndUniqueIp(start, end);
+            statistics = statisticRepository.findStatisticByTime(start, end);
         } else {
-            statistics = statisticRepository.findStatisticByTimeAndUniqueIp(start, end);
+            statistics = statisticRepository.findStatisticByTimeAndAndUris(start, end, uris);
         }
-        return statistics; //.stream()
-//                .map(StatsisticMapper::mapToStatisticDto)
-//                .collect(Collectors.toList());
+        return statistics;
     }
 }
