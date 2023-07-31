@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.statistics.statistic.dtos.StatisticDto;
+import ru.practicum.statistics.statistic.dtos.StatisticDtoOut;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -26,10 +27,10 @@ public class StatisticController {
     }
 
     @GetMapping("/stats")
-    public List<StatisticDto> getStatistics(@RequestParam(name = "start") String strStart,
-                                            @RequestParam(name = "end") String strEnd,
-                                            @RequestParam(defaultValue = "") String[] uris,
-                                            @RequestParam(defaultValue = "false") boolean unique) {
+    public List<StatisticDtoOut> getStatistics(@RequestParam(name = "start") String strStart,
+                                               @RequestParam(name = "end") String strEnd,
+                                               @RequestParam(defaultValue = "") String[] uris,
+                                               @RequestParam(defaultValue = "false") boolean unique) {
         log.info("Getting statistic");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime start = LocalDateTime.parse(strStart, formatter);
