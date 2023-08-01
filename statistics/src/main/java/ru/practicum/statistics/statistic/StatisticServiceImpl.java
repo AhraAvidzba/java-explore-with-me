@@ -2,27 +2,26 @@ package ru.practicum.statistics.statistic;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.statistics.statistic.dtos.StatisticDto;
-import ru.practicum.statistics.statistic.dtos.StatisticDtoOut;
-import ru.practicum.statistics.statistic.dtos.StatsisticMapper;
+import ru.practicum.ewm.dtos.StatisticInDto;
+import ru.practicum.ewm.dtos.StatisticOutDto;
+import ru.practicum.ewm.dtos.StatisticWithHitsDto;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class StatisticServiceImpl implements StatisticService{
     private final StatisticRepository statisticRepository;
     @Override
-    public Statistic addStatistic(Statistic statistic) {
-        return statisticRepository.save(statistic);
+    public StatisticOutDto addStatistic(StatisticInDto statisticInDto) {
+        Statistic statistic = statisticRepository.save(StatisticMapper.mapToStatistic(statisticInDto));
+        return StatisticMapper.mapToStatisticOutDto(statistic);
     }
 
     @Override
-    public List<StatisticDtoOut> getStatistics(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
-        List<StatisticDtoOut> statistics;
+    public List<StatisticWithHitsDto> getStatistics(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
+        List<StatisticWithHitsDto> statistics;
         if (uris.length == 0 && unique) {
             statistics = statisticRepository.findStatisticByTimeAndUniqueIp(start, end);
         } else if (uris.length > 0 && unique) {

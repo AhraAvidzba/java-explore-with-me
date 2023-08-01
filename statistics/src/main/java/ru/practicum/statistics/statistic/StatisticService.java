@@ -1,12 +1,13 @@
 package ru.practicum.statistics.statistic;
 
-import ru.practicum.statistics.statistic.dtos.StatisticDto;
-import ru.practicum.statistics.statistic.dtos.StatisticDtoOut;
+import ru.practicum.ewm.dtos.StatisticInDto;
+import ru.practicum.ewm.dtos.StatisticOutDto;
+import ru.practicum.ewm.dtos.StatisticWithHitsDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface StatisticService {
-    Statistic addStatistic(Statistic statistic);
-    List<StatisticDtoOut> getStatistics(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique);
+    StatisticOutDto addStatistic(StatisticInDto statisticInDto);
+    List<StatisticWithHitsDto> getStatistics(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique);
 }
