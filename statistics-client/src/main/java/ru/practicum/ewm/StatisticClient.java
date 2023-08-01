@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.ewm.client.BaseClient;
+import ru.practicum.ewm.dtos.StatisticInDto;
 
 import java.util.Map;
 
@@ -26,17 +27,17 @@ public class StatisticClient extends BaseClient {
         );
     }
 
-//    public ResponseEntity<Object> addStatistic(StatisticInDto statistic) {
-//        return post("/hit", statistic);
-//    }
+    public ResponseEntity<Object> addStatistic(StatisticInDto statistic) {
+        return post("/hit", statistic);
+    }
 
-//    public ResponseEntity<Object> getStatistics(String strStart, String strEnd, String[] uris, boolean unique) {
-//        Map<String, Object> parameters = Map.of(
-//                "strStart", strStart,
-//                "strEnd", strEnd,
-//                "uris", uris,
-//                "unique", unique
-//        );
-//        return get("?strStart={strStart}&strEnd={strEnd}&unique={unique}&uris={uris}", userId, parameters);
-//    }
+    public ResponseEntity<Object> getStatistics(String strStart, String strEnd, String[] uris, boolean unique) {
+        Map<String, Object> parameters = Map.of(
+                "strStart", strStart,
+                "strEnd", strEnd,
+                "uris", uris,
+                "unique", unique
+        );
+        return get("?strStart={strStart}&strEnd={strEnd}&unique={unique}&uris={uris}", parameters);
+    }
 }
