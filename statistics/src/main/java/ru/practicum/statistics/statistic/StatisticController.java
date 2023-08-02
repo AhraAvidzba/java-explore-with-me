@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dtos.StatisticInDto;
 import ru.practicum.ewm.dtos.StatisticOutDto;
-import ru.practicum.ewm.dtos.StatisticWithHitsDto;
+import ru.practicum.ewm.dtos.StatisticWithHitsProjection;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,15 +24,15 @@ public class StatisticController {
     }
 
     @GetMapping("/stats")
-    public List<StatisticWithHitsDto> getStatistics(@RequestParam(name = "start") String strStart,
-                                                    @RequestParam(name = "end") String strEnd,
-                                                    @RequestParam(defaultValue = "") String[] uris,
-                                                    @RequestParam(defaultValue = "false") boolean unique) {
+    public List<StatisticWithHitsProjection> getStatistics(@RequestParam(name = "start") String strStart,
+                                                           @RequestParam(name = "end") String strEnd,
+                                                           @RequestParam(defaultValue = "") String[] uris,
+                                                           @RequestParam(defaultValue = "false") boolean unique) {
         log.info("Getting statistic");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime start = LocalDateTime.parse(strStart, formatter);
         LocalDateTime end = LocalDateTime.parse(strEnd, formatter);
-
-        return statisticService.getStatistics(start, end, uris, unique);
+        List<StatisticWithHitsProjection> res = statisticService.getStatistics(start, end, uris, unique);;
+        return res;
     }
 }

@@ -16,6 +16,7 @@ public class StatisticMapper {
 
     public static StatisticOutDto mapToStatisticOutDto(Statistic statistic) {
         StatisticOutDto statisticOutDto = new StatisticOutDto();
+        statisticOutDto.setId(statistic.getId());
         statisticOutDto.setUri(statistic.getUri());
         statisticOutDto.setApp(statistic.getApp());
         statisticOutDto.setIp(statistic.getIp());

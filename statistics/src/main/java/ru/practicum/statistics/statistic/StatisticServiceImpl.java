@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dtos.StatisticInDto;
 import ru.practicum.ewm.dtos.StatisticOutDto;
-import ru.practicum.ewm.dtos.StatisticWithHitsDto;
+import ru.practicum.ewm.dtos.StatisticWithHitsProjection;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,8 +20,8 @@ public class StatisticServiceImpl implements StatisticService{
     }
 
     @Override
-    public List<StatisticWithHitsDto> getStatistics(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
-        List<StatisticWithHitsDto> statistics;
+    public List<StatisticWithHitsProjection> getStatistics(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
+        List<StatisticWithHitsProjection> statistics;
         if (uris.length == 0 && unique) {
             statistics = statisticRepository.findStatisticByTimeAndUniqueIp(start, end);
         } else if (uris.length > 0 && unique) {
