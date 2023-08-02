@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>ewm-dto</artifactId>
+    <artifactId>statistic-dto</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
