@@ -14,6 +14,8 @@ import ru.practicum.ewm.dtos.StatisticOutDto;
 import ru.practicum.ewm.dtos.StatisticWithHitsDto;
 import ru.practicum.ewm.dtos.StatisticWithHitsProjection;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -52,6 +54,8 @@ public class StatisticClient extends BaseClient {
     }
 
     public List<StatisticWithHitsDto> getStatistics(String strStart, String strEnd, String[] uris, boolean unique) {
+        strStart = URLEncoder.encode(strStart, StandardCharsets.UTF_8);
+        strEnd = URLEncoder.encode(strEnd, StandardCharsets.UTF_8);
         Map<String, Object> parameters = Map.of(
                 "start", strStart,
                 "end", strEnd,
@@ -61,7 +65,6 @@ public class StatisticClient extends BaseClient {
         String statisticWithHitsDtoListStr = get("/stats?start={start}&end={end}&unique={unique}&uris={uris}", parameters).getBody();
         List<StatisticWithHitsDto> statisticWithHitsList;
         try {
-//            statisticWithHitsList = objectMapper.readValue(statisticWithHitsDtoListStr, StatisticWithHitsProjection[].class));
             statisticWithHitsList = Arrays.stream(objectMapper.readValue(statisticWithHitsDtoListStr, StatisticWithHitsDto[].class)).collect(Collectors.toList());
         } catch (JsonProcessingException e) {
             return Collections.emptyList();

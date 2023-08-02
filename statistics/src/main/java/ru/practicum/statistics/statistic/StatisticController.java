@@ -7,6 +7,9 @@ import ru.practicum.ewm.dtos.StatisticInDto;
 import ru.practicum.ewm.dtos.StatisticOutDto;
 import ru.practicum.ewm.dtos.StatisticWithHitsProjection;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -29,6 +32,9 @@ public class StatisticController {
                                                            @RequestParam(defaultValue = "") String[] uris,
                                                            @RequestParam(defaultValue = "false") boolean unique) {
         log.info("Getting statistic");
+        strStart = URLDecoder.decode(strStart, StandardCharsets.UTF_8);
+        strEnd = URLDecoder.decode(strEnd, StandardCharsets.UTF_8);
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime start = LocalDateTime.parse(strStart, formatter);
         LocalDateTime end = LocalDateTime.parse(strEnd, formatter);
