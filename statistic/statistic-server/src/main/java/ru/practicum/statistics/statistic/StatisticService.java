@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface StatisticService {
     StatisticOutDto addStatistic(StatisticInDto statisticInDto);
+
     List<StatisticWithHitsProjection> getStatistics(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique);
 }

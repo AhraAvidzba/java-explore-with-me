@@ -11,8 +11,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class StatisticServiceImpl implements StatisticService{
+public class StatisticServiceImpl implements StatisticService {
     private final StatisticRepository statisticRepository;
+
     @Override
     public StatisticOutDto addStatistic(StatisticInDto statisticInDto) {
         Statistic statistic = statisticRepository.save(StatisticMapper.mapToStatistic(statisticInDto));

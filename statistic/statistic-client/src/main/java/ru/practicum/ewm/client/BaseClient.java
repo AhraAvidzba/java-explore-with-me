@@ -1,19 +1,16 @@
 package ru.practicum.ewm.client;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-import ru.practicum.ewm.dtos.StatisticOutDto;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class BaseClient {
     protected final RestTemplate rest;
+
     public BaseClient(RestTemplate rest) {
         this.rest = rest;
     }
@@ -21,6 +18,7 @@ public class BaseClient {
     protected ResponseEntity<String> get(String path, @Nullable Map<String, Object> parameters) {
         return makeAndSendRequest(HttpMethod.GET, path, parameters, null);
     }
+
     protected <T> ResponseEntity<String> post(String path, T body) {
         return makeAndSendRequest(HttpMethod.POST, path, null, body);
     }

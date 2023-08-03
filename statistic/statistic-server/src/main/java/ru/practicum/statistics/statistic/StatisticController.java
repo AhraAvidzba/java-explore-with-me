@@ -8,7 +8,6 @@ import ru.practicum.ewm.dtos.StatisticOutDto;
 import ru.practicum.ewm.dtos.StatisticWithHitsProjection;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,7 +37,6 @@ public class StatisticController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime start = LocalDateTime.parse(strStart, formatter);
         LocalDateTime end = LocalDateTime.parse(strEnd, formatter);
-        List<StatisticWithHitsProjection> res = statisticService.getStatistics(start, end, uris, unique);;
-        return res;
+        return statisticService.getStatistics(start, end, uris, unique);
     }
 }

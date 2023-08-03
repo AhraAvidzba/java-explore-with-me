@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dtos.StatisticInDto;
 import ru.practicum.ewm.dtos.StatisticOutDto;
 import ru.practicum.ewm.dtos.StatisticWithHitsDto;
-import ru.practicum.ewm.dtos.StatisticWithHitsProjection;
 
 import java.util.List;
 

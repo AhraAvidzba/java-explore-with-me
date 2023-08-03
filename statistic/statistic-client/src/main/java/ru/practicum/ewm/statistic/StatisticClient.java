@@ -12,7 +12,6 @@ import ru.practicum.ewm.client.BaseClient;
 import ru.practicum.ewm.dtos.StatisticInDto;
 import ru.practicum.ewm.dtos.StatisticOutDto;
 import ru.practicum.ewm.dtos.StatisticWithHitsDto;
-import ru.practicum.ewm.dtos.StatisticWithHitsProjection;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -22,15 +21,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.RequestEntity.post;
-
 
 @Service
 public class StatisticClient extends BaseClient {
 
     private static final String API_PREFIX = "";
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+
     @Autowired
     public StatisticClient(@Value("${statistics-server.url}") String serverUrl, RestTemplateBuilder builder, ObjectMapper objectMapper) {
         super(

@@ -1,6 +1,5 @@
 package ru.practicum.statistics.statistic;
 
-import ru.practicum.statistics.statistic.Statistic;
 import ru.practicum.ewm.dtos.StatisticInDto;
 import ru.practicum.ewm.dtos.StatisticOutDto;
 
