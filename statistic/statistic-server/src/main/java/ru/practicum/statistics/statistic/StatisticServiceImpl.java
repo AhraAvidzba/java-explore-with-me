@@ -23,15 +23,30 @@ public class StatisticServiceImpl implements StatisticService {
     @Override
     public List<StatisticWithHitsProjection> getStatistics(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
         List<StatisticWithHitsProjection> statistics;
-        if (uris.length == 0 && unique) {
-            statistics = statisticRepository.findStatisticByTimeAndUniqueIp(start, end);
-        } else if (uris.length > 0 && unique) {
-            statistics = statisticRepository.findStatisticByTimeAndUniqueIpAndUris(start, end, uris);
-        } else if (uris.length == 0) {
-            statistics = statisticRepository.findStatisticByTime(start, end);
+        if (unique) {
+            if (uris.length == 0) {
+                statistics = statisticRepository.findStatisticByTimeAndUniqueIp(start, end);
+            } else {
+                statistics = statisticRepository.findStatisticByTimeAndUniqueIpAndUris(start, end, uris);
+            }
         } else {
-            statistics = statisticRepository.findStatisticByTimeAndAndUris(start, end, uris);
+            if (uris.length == 0) {
+                statistics = statisticRepository.findStatisticByTime(start, end);
+            } else {
+                statistics = statisticRepository.findStatisticByTimeAndAndUris(start, end, uris);
+            }
         }
+
+//
+//        if (uris.length == 0 && unique) {
+//            statistics = statisticRepository.findStatisticByTimeAndUniqueIp(start, end);
+//        } else if (uris.length > 0 && unique) {
+//            statistics = statisticRepository.findStatisticByTimeAndUniqueIpAndUris(start, end, uris);
+//        } else if (uris.length == 0) {
+//            statistics = statisticRepository.findStatisticByTime(start, end);
+//        } else {
+//            statistics = statisticRepository.findStatisticByTimeAndAndUris(start, end, uris);
+//        }
         return statistics;
     }
 }
