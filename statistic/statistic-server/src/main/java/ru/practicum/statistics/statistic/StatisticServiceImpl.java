@@ -36,17 +36,6 @@ public class StatisticServiceImpl implements StatisticService {
                 statistics = statisticRepository.findStatisticByTimeAndAndUris(start, end, uris);
             }
         }
-
-//
-//        if (uris.length == 0 && unique) {
-//            statistics = statisticRepository.findStatisticByTimeAndUniqueIp(start, end);
-//        } else if (uris.length > 0 && unique) {
-//            statistics = statisticRepository.findStatisticByTimeAndUniqueIpAndUris(start, end, uris);
-//        } else if (uris.length == 0) {
-//            statistics = statisticRepository.findStatisticByTime(start, end);
-//        } else {
-//            statistics = statisticRepository.findStatisticByTimeAndAndUris(start, end, uris);
-//        }
         return statistics;
     }
 }
