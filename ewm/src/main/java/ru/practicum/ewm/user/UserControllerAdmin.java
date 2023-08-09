@@ -29,7 +29,7 @@ public class UserControllerAdmin {
     @ResponseStatus(code = HttpStatus.CREATED)
     public UserDto saveUser(@RequestBody ShortUserDto shortUserDto) {
         UserDto savedUserDto = userService.saveUser(shortUserDto);
-        log.info("Пользователь сохраняется, id = {}", savedUserDto.getId());
+        log.info("Пользователь сохранен, id = {}", savedUserDto.getId());
         return savedUserDto;
     }
 

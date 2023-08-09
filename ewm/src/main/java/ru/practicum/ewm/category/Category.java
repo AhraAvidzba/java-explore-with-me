@@ -1,29 +1,23 @@
-package ru.practicum.ewm.user;
+package ru.practicum.ewm.category;
 
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 @Builder
-@Entity
-@Table(name = "users")
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Entity
+@Table(name = "categories")
+@NoArgsConstructor
 @Getter
 @Setter
-public class User {
+@ToString
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column
+    @Column(unique = true)
     @NotEmpty
     private String name;
-
-    @Column(unique = true)
-    @Email
-    private String email;
 }
