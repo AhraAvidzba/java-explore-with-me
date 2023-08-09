@@ -23,6 +23,6 @@ public class Statistic {
     private String uri;
     @Column
     private String ip;
-    @Column(name = "timestamp")
-    private LocalDateTime timestamp;
+    @Column(name = "request_time")
+    private LocalDateTime requestTime;
 }

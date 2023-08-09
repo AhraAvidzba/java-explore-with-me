@@ -9,7 +9,7 @@ public class StatisticMapper {
         statistic.setUri(statisticInDto.getUri());
         statistic.setApp(statisticInDto.getApp());
         statistic.setIp(statisticInDto.getIp());
-        statistic.setTimestamp(statisticInDto.getTimestamp());
+        statistic.setRequestTime(statisticInDto.getTimestamp());
         return statistic;
     }
 
@@ -19,7 +19,7 @@ public class StatisticMapper {
         statisticOutDto.setUri(statistic.getUri());
         statisticOutDto.setApp(statistic.getApp());
         statisticOutDto.setIp(statistic.getIp());
-        statisticOutDto.setTimestamp(statistic.getTimestamp());
+        statisticOutDto.setTimestamp(statistic.getRequestTime());
         return statisticOutDto;
     }
 }
