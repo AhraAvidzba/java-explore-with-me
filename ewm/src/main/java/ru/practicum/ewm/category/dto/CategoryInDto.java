@@ -1,6 +1,5 @@
 package ru.practicum.ewm.category.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -11,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryInDto {
-//    private Long id;
+    //    private Long id;
     @NotEmpty
     private String name;
 }
