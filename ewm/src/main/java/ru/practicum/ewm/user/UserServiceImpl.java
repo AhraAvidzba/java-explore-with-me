@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.exceptions.ContentAlreadyExistException;
 import ru.practicum.ewm.exceptions.ContentNotFountException;
 import ru.practicum.ewm.user.dto.ShortUserDto;
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getUsers(List<Long> ids, int from, int size) {
         PageRequest pageable = PageRequest.of(from, size, Sort.by("id").ascending());
         return userRepository.findUserByIdIn(ids, pageable).stream()

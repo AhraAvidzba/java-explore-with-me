@@ -2,6 +2,7 @@ package ru.practicum.statistics.statistic;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dtos.StatisticInDto;
 import ru.practicum.ewm.dtos.StatisticOutDto;
 import ru.practicum.ewm.dtos.StatisticWithHitsProjection;
@@ -21,6 +22,7 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<StatisticWithHitsProjection> getStatistics(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
         List<StatisticWithHitsProjection> statistics;
         if (unique) {
