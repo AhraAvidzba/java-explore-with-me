@@ -25,7 +25,7 @@ public class RequestControllerPrivate {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public RequestDto addRequest(@RequestParam Long eventId,
-                                     @PathVariable Long userId) {
+                                 @PathVariable Long userId) {
         RequestDto requestDto = requestService.addRequest(eventId, userId);
         log.info("Отправляется запрос на участие в событии");
         return requestDto;
@@ -34,7 +34,7 @@ public class RequestControllerPrivate {
     @PatchMapping("/{requestId}/cancel")
     @ResponseStatus(code = HttpStatus.OK)
     public RequestDto cancelRequest(@PathVariable Long userId,
-                                       @PathVariable Long requestId) {
+                                    @PathVariable Long requestId) {
         log.info("Обновляется апрос на участие в событии");
         return requestService.cancelRequest(userId, requestId);
     }

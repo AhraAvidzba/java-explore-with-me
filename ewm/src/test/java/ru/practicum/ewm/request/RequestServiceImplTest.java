@@ -16,10 +16,6 @@ import ru.practicum.ewm.exceptions.ContentNotFoundException;
 import ru.practicum.ewm.request.dto.RequestDto;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
-import ru.practicum.ewm.user.UserServiceImpl;
-import ru.practicum.ewm.user.dto.ShortUserDto;
-import ru.practicum.ewm.user.dto.UserDto;
-import ru.practicum.ewm.user.dto.UserMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +23,6 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;

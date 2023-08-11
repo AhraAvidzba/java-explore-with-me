@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.practicum.ewm.user.dto.ShortUserDto;
+import ru.practicum.ewm.user.dto.UserInDto;
 import ru.practicum.ewm.user.dto.UserDto;
 
 import javax.transaction.Transactional;
@@ -28,7 +28,7 @@ class UserServiceITest {
     @Test
     void getAllUsers() {
         //given
-        List<ShortUserDto> sourceUsers = List.of(
+        List<UserInDto> sourceUsers = List.of(
                 makeShortUserDto("ivan@email", "Ivan"),
                 makeShortUserDto("petr@email", "Petr"),
                 makeShortUserDto("vasilii@email", "Vasilii")
@@ -38,7 +38,7 @@ class UserServiceITest {
         List<UserDto> targetUsers = userService.getUsers(List.of(1L, 2L, 3L), 0, 10);
         //then
         assertThat(targetUsers, hasSize(sourceUsers.size()));
-        for (ShortUserDto sourceUser : sourceUsers) {
+        for (UserInDto sourceUser : sourceUsers) {
             assertThat(targetUsers, hasItem(allOf(
                     hasProperty("id", notNullValue()),
                     hasProperty("name", equalTo(sourceUser.getName())),
@@ -47,8 +47,8 @@ class UserServiceITest {
         }
     }
 
-    private ShortUserDto makeShortUserDto(String email, String name) {
-        return ShortUserDto.builder()
+    private UserInDto makeShortUserDto(String email, String name) {
+        return UserInDto.builder()
         .email(email)
         .name(name)
         .build();

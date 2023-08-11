@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class ShortUserDto {
+public class UserShortDto {
+    private Long id;
     private String name;
-    private String email;
 }

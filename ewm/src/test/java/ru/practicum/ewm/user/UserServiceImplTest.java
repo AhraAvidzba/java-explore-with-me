@@ -1,14 +1,11 @@
 package ru.practicum.ewm.user;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.practicum.ewm.user.dto.ShortUserDto;
+import ru.practicum.ewm.user.dto.UserInDto;
 import ru.practicum.ewm.user.dto.UserDto;
 import ru.practicum.ewm.user.dto.UserMapper;
 
@@ -16,7 +13,6 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
@@ -27,8 +23,8 @@ class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
 
-    private ShortUserDto createUser() {
-        return ShortUserDto.builder()
+    private UserInDto createUser() {
+        return UserInDto.builder()
                 .email("akhraa1@yandex.ru")
                 .name("Akhra")
                 .build();

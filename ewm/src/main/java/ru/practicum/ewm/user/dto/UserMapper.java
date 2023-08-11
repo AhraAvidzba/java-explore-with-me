@@ -13,9 +13,16 @@ public class UserMapper {
                 .build();
     }
 
-    public static ShortUserDto toShortUserDto(User user) {
-        return ShortUserDto.builder()
+    public static UserInDto toUserInDto(User user) {
+        return UserInDto.builder()
                 .email(user.getEmail())
+                .name(user.getName())
+                .build();
+    }
+
+    public static UserShortDto toUserShortDto(User user) {
+        return UserShortDto.builder()
+                .id(user.getId())
                 .name(user.getName())
                 .build();
     }
@@ -28,10 +35,10 @@ public class UserMapper {
                 .build();
     }
 
-    public static User toUser(ShortUserDto shortUserDto) {
+    public static User toUser(UserInDto userInDto) {
         return User.builder()
-                .email(shortUserDto.getEmail())
-                .name(shortUserDto.getName())
+                .email(userInDto.getEmail())
+                .name(userInDto.getName())
                 .build();
     }
 }

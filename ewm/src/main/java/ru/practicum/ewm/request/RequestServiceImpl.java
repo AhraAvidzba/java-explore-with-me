@@ -19,10 +19,11 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class RequestServiceImpl implements RequestService{
+public class RequestServiceImpl implements RequestService {
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
+
     @Override
     public List<RequestDto> getRequests(Long userId) {
         userRepository.findById(userId)
@@ -41,7 +42,8 @@ public class RequestServiceImpl implements RequestService{
                 .orElseThrow(() -> new ContentNotFoundException("Событие не найдено"));
         requestRepository.findRequestByRequesterIdAndEventId(userId, eventId)
                 .ifPresent((x) ->
-                    {throw new ContentAlreadyExistException("Запрос на участие в данном событии был ранее уже отправлен пользователем");
+                {
+                    throw new ContentAlreadyExistException("Запрос на участие в данном событии был ранее уже отправлен пользователем");
                 });
         if (user.getId().equals(event.getInitiator().getId())) {
             throw new ContentAlreadyExistException("Инициатор события не может добавить запрос на участие в своём событии");

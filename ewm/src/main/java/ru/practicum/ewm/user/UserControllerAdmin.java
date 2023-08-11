@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.user.dto.ShortUserDto;
 import ru.practicum.ewm.user.dto.UserDto;
+import ru.practicum.ewm.user.dto.UserInDto;
 
 import java.util.List;
 
@@ -27,8 +27,8 @@ public class UserControllerAdmin {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public UserDto saveUser(@RequestBody ShortUserDto shortUserDto) {
-        UserDto savedUserDto = userService.saveUser(shortUserDto);
+    public UserDto saveUser(@RequestBody UserInDto userInDto) {
+        UserDto savedUserDto = userService.saveUser(userInDto);
         log.info("Пользователь сохранен, id = {}", savedUserDto.getId());
         return savedUserDto;
     }

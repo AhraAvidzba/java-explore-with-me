@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.exceptions.ContentAlreadyExistException;
 import ru.practicum.ewm.exceptions.ContentNotFoundException;
-import ru.practicum.ewm.user.dto.ShortUserDto;
 import ru.practicum.ewm.user.dto.UserDto;
+import ru.practicum.ewm.user.dto.UserInDto;
 import ru.practicum.ewm.user.dto.UserMapper;
 
 import java.util.List;
@@ -30,13 +30,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto saveUser(ShortUserDto shortUserDto) {
-        Optional<User> userEmail = userRepository.findUserByEmail(shortUserDto.getEmail());
+    public UserDto saveUser(UserInDto userInDto) {
+        Optional<User> userEmail = userRepository.findUserByEmail(userInDto.getEmail());
         userEmail.ifPresent(x -> {
-            throw new ContentAlreadyExistException("Пользователь с email = " + shortUserDto.getEmail() + " уже существует");
+            throw new ContentAlreadyExistException("Пользователь с email = " + userInDto.getEmail() + " уже существует");
         });
 
-        User user = UserMapper.toUser(shortUserDto);
+        User user = UserMapper.toUser(userInDto);
         return UserMapper.toUserDto(userRepository.save(user));
     }
 
