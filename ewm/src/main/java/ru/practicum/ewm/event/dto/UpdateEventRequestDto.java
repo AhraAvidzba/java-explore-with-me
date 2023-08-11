@@ -5,10 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.ewm.category.dto.CategoryOutDto;
-import ru.practicum.ewm.event.State;
 import ru.practicum.ewm.event.StateAction;
 import ru.practicum.ewm.location.dto.LocationDto;
-import ru.practicum.ewm.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 
@@ -18,13 +16,13 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 public class UpdateEventRequestDto {
     private String annotation;
-    private CategoryOutDto category;
+    private Long category;
     private String description;
     private LocalDateTime eventDate;
     private LocationDto location;
-    private boolean paid;
-    private int participantLimit;
-    private boolean requestModeration;
+    private Boolean paid;
+    private Integer participantLimit;
+    private Boolean requestModeration;
     private StateAction stateAction;
     private String title;
 
