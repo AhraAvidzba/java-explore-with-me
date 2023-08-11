@@ -24,7 +24,13 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<UserDto> getUsers(List<Long> ids, int from, int size) {
         PageRequest pageable = PageRequest.of(from, size, Sort.by("id").ascending());
-        return userRepository.findUserByIdIn(ids, pageable).stream()
+        List<User> users;
+        if (ids.size() == 1 && ids.get(0) == -1) {
+            users = userRepository.findAll(pageable).toList();
+        } else {
+            users = userRepository.findUserByIdIn(ids, pageable);
+        }
+        return users.stream()
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());
     }
