@@ -10,7 +10,6 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryInDto {
-    //    private Long id;
     @NotEmpty
     private String name;
 }

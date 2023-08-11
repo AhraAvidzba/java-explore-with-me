@@ -14,9 +14,9 @@ import java.util.List;
 
 @RestControllerAdvice
 public class ExceptionApiHandler {
-    @ExceptionHandler(ContentNotFountException.class)
+    @ExceptionHandler(ContentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiError handleException(ContentNotFountException exception) {
+    public ApiError handleException(ContentNotFoundException exception) {
         return new ApiError(exception.getMessage(),
                 "Некорректный запрос.",
                 HttpStatus.NOT_FOUND.toString(),

@@ -11,7 +11,7 @@ import ru.practicum.ewm.category.dto.CategoryOutDto;
 import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.event.EventRepository;
 import ru.practicum.ewm.exceptions.ContentAlreadyExistException;
-import ru.practicum.ewm.exceptions.ContentNotFountException;
+import ru.practicum.ewm.exceptions.ContentNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void removeCategory(Long catId) {
         categoryRepository.findById(catId)
-                .orElseThrow(() -> new ContentNotFountException("Пользователя с id = " + catId + " не существует"));
+                .orElseThrow(() -> new ContentNotFoundException("Пользователя с id = " + catId + " не существует"));
         List<Event> events = eventRepository.findEventByCategoryId(catId);
         if (!events.isEmpty()) {
             throw new ContentAlreadyExistException("Существуют привязанные к данной категории события, удаление невозможно");
@@ -47,10 +47,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryOutDto editCategory(CategoryInDto categoryInDto, Long catId) {
         if (catId == null) {
-            throw new ContentNotFountException("Необходимо указать id категории");
+            throw new ContentNotFoundException("Необходимо указать id категории");
         }
         Category sameIdCategory = categoryRepository.findById(catId)
-                .orElseThrow(() -> new ContentNotFountException("Категория не найдена"));
+                .orElseThrow(() -> new ContentNotFoundException("Категория не найдена"));
 
         Optional<Category> sameNameCategory = categoryRepository.findCategoryByName(categoryInDto.getName());
 
@@ -73,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryOutDto getCategoryById(Long catId) {
         Category category = categoryRepository.findById(catId)
-                .orElseThrow(() -> new ContentNotFountException("Категория не найдена"));
+                .orElseThrow(() -> new ContentNotFoundException("Категория не найдена"));
         return CategoryMapper.mapToCategoryOutDto(category);
     }
 }

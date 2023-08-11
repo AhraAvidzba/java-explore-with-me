@@ -6,7 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.exceptions.ContentAlreadyExistException;
-import ru.practicum.ewm.exceptions.ContentNotFountException;
+import ru.practicum.ewm.exceptions.ContentNotFoundException;
 import ru.practicum.ewm.user.dto.ShortUserDto;
 import ru.practicum.ewm.user.dto.UserDto;
 import ru.practicum.ewm.user.dto.UserMapper;
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new ContentNotFountException("Пользователя с id = " + userId + " не существует"));
+                .orElseThrow(() -> new ContentNotFoundException("Пользователя с id = " + userId + " не существует"));
         userRepository.deleteById(userId);
     }
 }

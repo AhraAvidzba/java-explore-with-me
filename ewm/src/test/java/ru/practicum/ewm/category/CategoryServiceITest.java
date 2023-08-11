@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import ru.practicum.ewm.category.dto.CategoryInDto;
 import ru.practicum.ewm.category.dto.CategoryOutDto;
 import ru.practicum.ewm.exceptions.ContentAlreadyExistException;
-import ru.practicum.ewm.exceptions.ContentNotFountException;
-import ru.practicum.ewm.user.dto.ShortUserDto;
+import ru.practicum.ewm.exceptions.ContentNotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -80,7 +78,7 @@ class CategoryServiceITest {
         CategoryInDto categoryInDto = makeCategoryInDto("Кино");
         //when...then
         Assertions.assertThrows(
-                ContentNotFountException.class,
+                ContentNotFoundException.class,
                 () -> categoryService.editCategory(categoryInDto, 1L));
     }
 

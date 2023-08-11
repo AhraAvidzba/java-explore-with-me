@@ -1,4 +1,4 @@
-package ru.practicum.ewm.location;
+package ru.practicum.ewm.event;
 
 import lombok.*;
 

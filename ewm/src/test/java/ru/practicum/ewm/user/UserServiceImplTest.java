@@ -36,7 +36,6 @@ class UserServiceImplTest {
 
     @Test
     public void getAllUsers_whenInvoked_thenReturnUsersCollection() {
-
         when(userRepository.findUserByIdIn(anyList(), any()))
                 .thenReturn(List.of(UserMapper.toUser(createUser()), UserMapper.toUser(createUser())));
         List<UserDto>  users = userService.getUsers(List.of(1L, 2L), 0, 10);
