@@ -6,6 +6,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.compilation.dto.CompilationDto;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
@@ -17,8 +19,8 @@ public class CompilationControllerPublic {
     private final CompilationService compilationService;
 
     @GetMapping
-    public List<CompilationDto> getCompilations(@RequestParam boolean pinned,
-                                                @RequestParam(defaultValue = "0") int from,
+    public List<CompilationDto> getCompilations(@PositiveOrZero @RequestParam boolean pinned,
+                                                @Positive @RequestParam(defaultValue = "0") int from,
                                                 @RequestParam(defaultValue = "10") int size) {
         List<CompilationDto> compilationDto = compilationService.getCompilations(pinned, from, size);
         log.info("Подборки возвращаются");

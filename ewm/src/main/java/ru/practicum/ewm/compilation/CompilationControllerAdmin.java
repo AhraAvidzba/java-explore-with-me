@@ -7,6 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.compilation.dto.CompilationDto;
 import ru.practicum.ewm.compilation.dto.CompilationInDto;
+import ru.practicum.ewm.validations.Create;
+import ru.practicum.ewm.validations.Update;
 
 @Slf4j
 @RestController
@@ -18,7 +20,7 @@ public class CompilationControllerAdmin {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public CompilationDto addCompilation(@RequestBody CompilationInDto compilationInDto) {
+    public CompilationDto addCompilation(@Validated(Create.class) @RequestBody CompilationInDto compilationInDto) {
         CompilationDto compilationDto = compilationService.addCompilation(compilationInDto);
         log.info("Подборка добавлена");
         return compilationDto;
@@ -33,7 +35,7 @@ public class CompilationControllerAdmin {
 
     @PatchMapping("/{compId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public CompilationDto editCompilation(@RequestBody CompilationInDto compilationInDto,
+    public CompilationDto editCompilation(@Validated(Update.class) @RequestBody CompilationInDto compilationInDto,
                                           @PathVariable Long compId) {
         log.info("Подборка обновляется");
         return compilationService.editCompilation(compilationInDto, compId);

@@ -1,11 +1,14 @@
 package ru.practicum.ewm.event;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 import ru.practicum.ewm.category.Category;
 import ru.practicum.ewm.location.Location;
 import ru.practicum.ewm.user.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Builder
@@ -21,26 +24,34 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
+    @NotBlank
+    @Length(min = 20, max = 2000)
     private String annotation;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
+    @NotNull
     private Category category;
     @Column
     private int confirmedRequests;
     @Column
     private LocalDateTime createdOn;
     @Column
+    @Length(min = 20, max = 7000)
     private String description;
     @Column
+    @NotNull
     private LocalDateTime eventDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @NotNull
     private User initiator;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "locaton_id")
+    @NotNull
     private Location location;
     @Column
-    private boolean paid;
+    @NotNull
+    private Boolean paid;
     @Column
     private int participantLimit;
     @Column
@@ -51,6 +62,8 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private State state;
     @Column
+    @NotBlank
+    @Length(min = 3, max = 120)
     private String title;
     @Column
     private int views;

@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 @Builder
@@ -20,6 +21,7 @@ public class Category {
     private Long id;
     @Column(unique = true)
     @NotEmpty
+    @NotBlank
     @Length(min = 1, max = 50)
     private String name;
 }

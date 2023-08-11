@@ -8,7 +8,7 @@ import ru.practicum.ewm.event.State;
 import ru.practicum.ewm.exceptions.ContentAlreadyExistException;
 import ru.practicum.ewm.exceptions.ContentNotFoundException;
 import ru.practicum.ewm.exceptions.EditingNotAllowedException;
-import ru.practicum.ewm.request.dto.RequestDto;
+import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 import ru.practicum.ewm.request.dto.RequestMapper;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
@@ -25,17 +25,17 @@ public class RequestServiceImpl implements RequestService {
     private final EventRepository eventRepository;
 
     @Override
-    public List<RequestDto> getRequests(Long userId) {
+    public List<ParticipationRequestDto> getRequests(Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new ContentNotFoundException("Пользователь не найден"));
-        List<Request> requests = requestRepository.findRequestByRequesterId(userId);
-        return requests.stream()
+        List<ParticipationRequest> participationRequests = requestRepository.findRequestByRequesterId(userId);
+        return participationRequests.stream()
                 .map(RequestMapper::mapToRequestDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public RequestDto addRequest(Long eventId, Long userId) {
+    public ParticipationRequestDto addRequest(Long eventId, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ContentNotFoundException("Пользователь не найден"));
         Event event = eventRepository.findById(eventId)
@@ -54,38 +54,38 @@ public class RequestServiceImpl implements RequestService {
         if (event.getParticipantLimit() != 0 && event.getParticipantLimit() == event.getConfirmedRequests()) {
             throw new ContentAlreadyExistException("Лимит на количество участников в этом событии достигнут");
         }
-        Request request = Request.builder()
+        ParticipationRequest participationRequest = ParticipationRequest.builder()
                 .requester(user)
                 .event(event)
                 .created(LocalDateTime.now())
                 .status(Status.PENDING)
                 .build();
         if (!event.isRequestModeration()) {
-            request.setStatus(Status.CONFIRMED);
+            participationRequest.setStatus(Status.CONFIRMED);
             event.setConfirmedRequests(event.getConfirmedRequests() + 1);
             eventRepository.save(event);
         }
-        Request savedRequest = requestRepository.save(request);
-        return RequestMapper.mapToRequestDto(savedRequest);
+        ParticipationRequest savedParticipationRequest = requestRepository.save(participationRequest);
+        return RequestMapper.mapToRequestDto(savedParticipationRequest);
     }
 
     @Override
-    public RequestDto cancelRequest(Long userId, Long requestId) {
+    public ParticipationRequestDto cancelRequest(Long userId, Long requestId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new ContentNotFoundException("Пользователь не найден"));
-        Request request = requestRepository.findById(requestId)
+        ParticipationRequest participationRequest = requestRepository.findById(requestId)
                 .orElseThrow(() -> new ContentAlreadyExistException("Запрос не найден"));
-        if (!request.getRequester().getId().equals(userId)) {
+        if (!participationRequest.getRequester().getId().equals(userId)) {
             throw new EditingNotAllowedException("Отменить запрос может только его владелец");
         }
-        if (request.getStatus().equals(Status.CONFIRMED)) {
-            Event event = request.getEvent();
+        if (participationRequest.getStatus().equals(Status.CONFIRMED)) {
+            Event event = participationRequest.getEvent();
             event.setConfirmedRequests(event.getConfirmedRequests() - 1);
             eventRepository.save(event);
         } else {
             throw new ContentNotFoundException("Подтвержденных запросов на участие не найдено");
         }
-        request.setStatus(Status.PENDING);
-        return RequestMapper.mapToRequestDto(requestRepository.save(request));
+        participationRequest.setStatus(Status.PENDING);
+        return RequestMapper.mapToRequestDto(requestRepository.save(participationRequest));
     }
 }

@@ -13,7 +13,7 @@ import ru.practicum.ewm.event.EventRepository;
 import ru.practicum.ewm.event.State;
 import ru.practicum.ewm.exceptions.ContentAlreadyExistException;
 import ru.practicum.ewm.exceptions.ContentNotFoundException;
-import ru.practicum.ewm.request.dto.RequestDto;
+import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
 
@@ -38,7 +38,7 @@ class RequestServiceImplTest {
     @InjectMocks
     private RequestServiceImpl requestService;
     @Captor
-    private ArgumentCaptor<Request> requestArgumentCaptor;
+    private ArgumentCaptor<ParticipationRequest> requestArgumentCaptor;
 
     @Test
     void getRequests() {
@@ -46,7 +46,7 @@ class RequestServiceImplTest {
                 .thenReturn(Optional.of(createUser()));
         when(requestRepository.findRequestByRequesterId(anyLong()))
                 .thenReturn(List.of(createRequest()));
-        List<RequestDto>  requests = requestService.getRequests(1L);
+        List<ParticipationRequestDto>  requests = requestService.getRequests(1L);
         assertThat(requests.size(), equalTo(1));
         assertThat(requests.get(0).getRequester(), equalTo(1L));
     }
@@ -74,13 +74,13 @@ class RequestServiceImplTest {
                 .thenReturn(Optional.of(event));
         when(requestRepository.save(any()))
                 .thenReturn(createRequest());
-        RequestDto requestDto = requestService.addRequest(1L, 1L);
+        ParticipationRequestDto participationRequestDto = requestService.addRequest(1L, 1L);
         //then
         verify(eventRepository, never()).save(any());
         assertThat(event.getConfirmedRequests(), equalTo(1));
-        assertThat(requestDto.getEvent(), equalTo(1L));
-        assertThat(requestDto.getRequester(), equalTo(1L));
-        assertThat(requestDto.getStatus(), equalTo(Status.PENDING));
+        assertThat(participationRequestDto.getEvent(), equalTo(1L));
+        assertThat(participationRequestDto.getRequester(), equalTo(1L));
+        assertThat(participationRequestDto.getStatus(), equalTo(Status.PENDING));
     }
 
     @Test
@@ -103,11 +103,11 @@ class RequestServiceImplTest {
         //then
         verify(eventRepository, times(1)).save(any());
         verify(requestRepository, times(1)).save(requestArgumentCaptor.capture());
-        Request request = requestArgumentCaptor.getValue();
+        ParticipationRequest participationRequest = requestArgumentCaptor.getValue();
         assertThat(event.getConfirmedRequests(), equalTo(2));
-        assertThat(request.getEvent().getId(), equalTo(1L));
-        assertThat(request.getRequester().getId(), equalTo(1L));
-        assertThat(request.getStatus(), equalTo(Status.CONFIRMED));
+        assertThat(participationRequest.getEvent().getId(), equalTo(1L));
+        assertThat(participationRequest.getRequester().getId(), equalTo(1L));
+        assertThat(participationRequest.getStatus(), equalTo(Status.CONFIRMED));
     }
 
     @Test
@@ -180,25 +180,25 @@ class RequestServiceImplTest {
         event.setState(State.PUBLISHED);
         event.getInitiator().setId(2L);
 
-        Request request = createRequest();
-        request.setEvent(event);
-        request.setStatus(Status.CONFIRMED);
+        ParticipationRequest participationRequest = createRequest();
+        participationRequest.setEvent(event);
+        participationRequest.setStatus(Status.CONFIRMED);
         //when
         when(userRepository.findById(anyLong()))
                 .thenReturn(Optional.of(createUser()));
         when(requestRepository.findById(anyLong()))
-                .thenReturn(Optional.of(request));
+                .thenReturn(Optional.of(participationRequest));
         when(requestRepository.save(any()))
-                .thenReturn(request);
+                .thenReturn(participationRequest);
         requestService.cancelRequest(1L, 1L);
         //then
         verify(eventRepository, times(1)).save(any());
         verify(requestRepository, times(1)).save(requestArgumentCaptor.capture());
-        Request savedRequest = requestArgumentCaptor.getValue();
-        assertThat(savedRequest.getEvent().getConfirmedRequests(), equalTo(0));
-        assertThat(savedRequest.getEvent().getId(), equalTo(1L));
-        assertThat(savedRequest.getRequester().getId(), equalTo(1L));
-        assertThat(savedRequest.getStatus(), equalTo(Status.PENDING));
+        ParticipationRequest savedParticipationRequest = requestArgumentCaptor.getValue();
+        assertThat(savedParticipationRequest.getEvent().getConfirmedRequests(), equalTo(0));
+        assertThat(savedParticipationRequest.getEvent().getId(), equalTo(1L));
+        assertThat(savedParticipationRequest.getRequester().getId(), equalTo(1L));
+        assertThat(savedParticipationRequest.getStatus(), equalTo(Status.PENDING));
     }
 
     @Test
@@ -211,14 +211,14 @@ class RequestServiceImplTest {
         event.setState(State.PUBLISHED);
         event.getInitiator().setId(2L);
 
-        Request request = createRequest();
-        request.setEvent(event);
-        request.setStatus(Status.REJECTED);
+        ParticipationRequest participationRequest = createRequest();
+        participationRequest.setEvent(event);
+        participationRequest.setStatus(Status.REJECTED);
         //when
         when(userRepository.findById(anyLong()))
                 .thenReturn(Optional.of(createUser()));
         when(requestRepository.findById(anyLong()))
-                .thenReturn(Optional.of(request));
+                .thenReturn(Optional.of(participationRequest));
         //then
         verify(eventRepository, never()).save(any());
         verify(requestRepository, never()).save(any());
@@ -243,8 +243,8 @@ class RequestServiceImplTest {
                 .build();
     }
 
-    private Request createRequest() {
-        return Request.builder()
+    private ParticipationRequest createRequest() {
+        return ParticipationRequest.builder()
                 .id(1L)
                 .created(LocalDateTime.now())
                 .requester(createUser())

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestDto {
+public class ParticipationRequestDto {
     private Long id;
     private LocalDateTime created;
     private Long event;

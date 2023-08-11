@@ -4,6 +4,8 @@ import lombok.*;
 import ru.practicum.ewm.event.Event;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Builder
@@ -20,9 +22,12 @@ public class Compilation {
     private Long id;
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "compilation_id")
+    @NotNull
     private List<Event> events;
     @Column
-    private boolean pinned;
+    @NotNull
+    private Boolean pinned;
     @Column
+    @NotBlank
     private String title;
 }

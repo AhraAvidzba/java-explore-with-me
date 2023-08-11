@@ -9,18 +9,21 @@ import ru.practicum.ewm.user.dto.UserDto;
 import ru.practicum.ewm.user.dto.UserInDto;
 import ru.practicum.ewm.validations.Create;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping(path = "/admin/users")
 @RequiredArgsConstructor
+@Validated
 public class UserControllerAdmin {
     private final UserService userService;
 
     @GetMapping
-    public List<UserDto> getUsers(@RequestParam(defaultValue = "-1") List<Long> ids,
-                                  @RequestParam(defaultValue = "0") int from,
+    public List<UserDto> getUsers(@PositiveOrZero @RequestParam(defaultValue = "-1") List<Long> ids,
+                                  @Positive @RequestParam(defaultValue = "0") int from,
                                   @RequestParam(defaultValue = "10") int size) {
         log.info("Возвращается список запрашиваемых пользователей");
         return userService.getUsers(ids, from, size);

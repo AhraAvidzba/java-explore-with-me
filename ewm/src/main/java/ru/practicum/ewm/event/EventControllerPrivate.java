@@ -7,6 +7,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.dto.EventInDto;
 import ru.practicum.ewm.event.dto.EventOutDto;
+import ru.practicum.ewm.event.dto.EventShortDto;
+
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -15,6 +20,16 @@ import ru.practicum.ewm.event.dto.EventOutDto;
 @Validated
 public class EventControllerPrivate {
     private final EventService eventService;
+
+    @GetMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public List<EventShortDto> getUserEvents(@PositiveOrZero @RequestParam(defaultValue = "0") int from,
+                                         @Positive @RequestParam(defaultValue = "10") int size,
+                                         @PathVariable Long userId) {
+        List<EventShortDto> eventShortsDto = eventService.getUserEvents(from, size, userId);
+        log.info("Возвращаются события");
+        return eventShortsDto;
+    }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)

@@ -2,6 +2,7 @@ package ru.practicum.ewm.category.dto;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 @Builder
@@ -11,5 +12,6 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 public class CategoryInDto {
     @NotEmpty
+    @NotBlank
     private String name;
 }

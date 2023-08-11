@@ -50,9 +50,9 @@ public class ExceptionApiHandler {
                 LocalDateTime.now());
     }
 
-    @ExceptionHandler(UnknownStateException.class)
+    @ExceptionHandler(UnavailableOperationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleException(UnknownStateException exception) {
+    public ApiError handleException(UnavailableOperationException exception) {
         return new ApiError(exception.getMessage(),
                 "Некорректный запрос.",
                 HttpStatus.BAD_REQUEST.toString(),

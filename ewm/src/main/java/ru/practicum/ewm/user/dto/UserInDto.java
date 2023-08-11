@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @EqualsAndHashCode
 public class UserInDto {
-    @NotBlankOrNull
+    @NotBlankOrNull(groups = Update.class)
     private String name;
     @NotNull(groups = Create.class)
     @Email(groups = Create.class)
