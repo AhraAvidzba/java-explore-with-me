@@ -7,13 +7,18 @@ import org.springframework.stereotype.Service;
 import ru.practicum.ewm.category.Category;
 import ru.practicum.ewm.category.CategoryRepository;
 import ru.practicum.ewm.event.dto.*;
+import ru.practicum.ewm.exceptions.ContentAlreadyExistException;
 import ru.practicum.ewm.exceptions.ContentNotFoundException;
 import ru.practicum.ewm.exceptions.UnavailableOperationException;
 import ru.practicum.ewm.location.Location;
 import ru.practicum.ewm.location.LocationRepository;
 import ru.practicum.ewm.location.dto.LocationDto;
 import ru.practicum.ewm.location.dto.LocationMapper;
+import ru.practicum.ewm.request.ParticipationRequest;
+import ru.practicum.ewm.request.RequestRepository;
+import ru.practicum.ewm.request.Status;
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
+import ru.practicum.ewm.request.dto.RequestMapper;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
 
@@ -28,6 +33,8 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
+    private final RequestRepository requestRepository;
+
 
 
     @Override
@@ -96,13 +103,55 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public ParticipationRequestDto getRequestsForUserEvent(Long eventId, Long userId) {
-        return null;
+    public List<ParticipationRequestDto> getRequestsForUserEvent(Long eventId, Long userId) {
+        checkUser(userId);
+        Event event = checkEvent(eventId);
+        if (!userId.equals(event.getInitiator().getId())) {
+            throw new UnavailableOperationException("Просматривать информацию о запросах на участие в событии может только его инициатор");
+        }
+        List<ParticipationRequest> requests = requestRepository.findRequestByEventId(eventId);
+        return requests.stream()
+                .map(RequestMapper::mapToRequestDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public EventRequestStatusUpdateResult changeStatusForUserEventsRequests(EventRequestStatusUpdateRequest requestsAndStatus, Long eventId, Long userId) {
-        return null;
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new ContentNotFoundException("Событие не найдено"));
+        if (event.getParticipantLimit() != 0 && event.getParticipantLimit() == event.getConfirmedRequests()) {
+            throw new ContentAlreadyExistException("Лимит на количество участников в этом событии достигнут");
+        }
+        if (!userId.equals(event.getInitiator().getId())) {
+            throw new ContentAlreadyExistException("Изменять статус запросо на участие в событии может только инициатор события");
+        }
+        List<ParticipationRequest> requests = requestRepository.findRequestByIdInAndEventId(requestsAndStatus.getRequestIds(), eventId);
+        if (requests.size() < requestsAndStatus.getRequestIds().size()) {
+            throw new UnavailableOperationException("Не все указанные id в запросах соответствуют запрашиваемому Событию");
+        }
+        for (ParticipationRequest request : requests) {
+            if (request.getStatus().equals(Status.PENDING)) {
+                if (event.getParticipantLimit() == event.getConfirmedRequests()) {
+                    request.setStatus(requestsAndStatus.getStatus());
+                    request.getEvent().setConfirmedRequests(request.getEvent().getConfirmedRequests() + 1);
+                } else {
+                    request.setStatus(Status.REJECTED);
+                }
+            }
+        }
+        eventRepository.save(event);
+        List<ParticipationRequest> confirmedRequests = requests.stream()
+                .filter(x -> x.getStatus().equals(Status.CONFIRMED))
+                .collect(Collectors.toList());
+        List<ParticipationRequest> rejectedRequests = requests.stream()
+                .filter(x -> x.getStatus().equals(Status.REJECTED))
+                .collect(Collectors.toList());
+        return EventRequestStatusUpdateResult.builder()
+                .confirmedRequests(confirmedRequests.stream()
+                        .map(RequestMapper::mapToRequestDto).collect(Collectors.toList()))
+                .rejectedRequests(rejectedRequests.stream()
+                        .map(RequestMapper::mapToRequestDto).collect(Collectors.toList()))
+                .build();
     }
 
     private void updateNonNullFields(Event event, UpdateEventRequestDto eventDto) {

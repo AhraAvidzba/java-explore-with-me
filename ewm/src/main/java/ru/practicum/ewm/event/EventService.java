@@ -11,6 +11,6 @@ public interface EventService {
     EventOutDto addEvent(EventInDto eventInDto, Long userId);
     EventOutDto getFullUserEvent(Long eventId, Long userId);
     EventOutDto editEvent(UpdateEventRequestDto event, Long userId, Long eventId);
-    ParticipationRequestDto getRequestsForUserEvent(Long eventId, Long userId);
+    List<ParticipationRequestDto> getRequestsForUserEvent(Long eventId, Long userId);
     EventRequestStatusUpdateResult changeStatusForUserEventsRequests(EventRequestStatusUpdateRequest requestsAndStatus, Long eventId, Long userId);
 }

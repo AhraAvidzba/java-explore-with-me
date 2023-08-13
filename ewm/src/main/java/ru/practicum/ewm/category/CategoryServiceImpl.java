@@ -35,8 +35,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void removeCategory(Long catId) {
-        categoryRepository.findById(catId)
-                .orElseThrow(() -> new ContentNotFoundException("Пользователя с id = " + catId + " не существует"));
+        Category category = categoryRepository.findById(catId)
+                .orElseThrow(() -> new ContentNotFoundException("Категории с id = " + catId + " не существует"));
         List<Event> events = eventRepository.findEventByCategoryId(catId);
         if (!events.isEmpty()) {
             throw new ContentAlreadyExistException("Существуют привязанные к данной категории события, удаление невозможно");
