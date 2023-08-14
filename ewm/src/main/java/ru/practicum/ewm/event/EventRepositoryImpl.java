@@ -22,7 +22,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
     private final EntityManager em;
 
     @Override
-    public List<Event> findTest(GetEventsCriteria getEventsCriteria) {
+    public List<Event> findEventsByCriteria(GetEventsCriteria getEventsCriteria) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime rangeStart = LocalDateTime.parse(getEventsCriteria.getRangeStart(), formatter);
         LocalDateTime rangeEnd = LocalDateTime.parse(getEventsCriteria.getRangeEnd(), formatter);

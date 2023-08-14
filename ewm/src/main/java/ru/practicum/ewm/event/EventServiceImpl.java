@@ -156,7 +156,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getEvents(GetEventsCriteria getEventsCriteria) {
-        List<Event> events = eventRepository.findTest(getEventsCriteria);
+        List<Event> events = eventRepository.findEventsByCriteria(getEventsCriteria);
         return events.stream()
                 .map(EventMapper::mapToEventShortDto)
                 .collect(Collectors.toList());

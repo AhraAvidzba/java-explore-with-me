@@ -5,5 +5,5 @@ import ru.practicum.ewm.event.dto.GetEventsCriteria;
 import java.util.List;
 
 public interface EventRepositoryCustom {
-    List<Event> findTest(GetEventsCriteria getEventsCriteria);
+    List<Event> findEventsByCriteria(GetEventsCriteria getEventsCriteria);
 }
