@@ -13,4 +13,13 @@ public interface EventService {
     EventOutDto editEvent(UpdateEventRequestDto event, Long userId, Long eventId);
     List<ParticipationRequestDto> getRequestsForUserEvent(Long eventId, Long userId);
     EventRequestStatusUpdateResult changeStatusForUserEventsRequests(EventRequestStatusUpdateRequest requestsAndStatus, Long eventId, Long userId);
+
+    //Публичные методы
+    List<EventShortDto> getEvents(GetEventsCriteria getEventsCriteria);
+    EventOutDto getFullEventById(Long eventId);
+
+
+
+    //Методы для админов
+
 }
