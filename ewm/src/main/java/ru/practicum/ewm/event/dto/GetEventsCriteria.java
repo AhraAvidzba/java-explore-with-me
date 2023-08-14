@@ -7,7 +7,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -20,12 +19,15 @@ public class GetEventsCriteria {
     private String text;
     @NotNull
     private List<Long> categories;
-    @NotNull
     private Boolean paid;
     @NotNull
-    private LocalDateTime rangeStart = LocalDateTime.now().minusDays(10000);
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private LocalDateTime rangeStart; // = LocalDateTime.now().minusDays(10000);
+    private String rangeStart;
     @NotNull
-    private LocalDateTime rangeEnd = LocalDateTime.now().plusDays(10000);
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private LocalDateTime rangeEnd; // = LocalDateTime.now().plusDays(10000);
+    private String rangeEnd;
     private Boolean onlyAvailable = false;
     @NotNull
     private Sort sort;

@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.ewm.validations.Create;
-import ru.practicum.ewm.validations.Update;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

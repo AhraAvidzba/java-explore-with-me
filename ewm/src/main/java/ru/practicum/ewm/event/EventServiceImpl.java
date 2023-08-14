@@ -22,11 +22,9 @@ import ru.practicum.ewm.request.dto.RequestMapper;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,8 +35,6 @@ public class EventServiceImpl implements EventService {
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
-    private final EntityManager em;
-
 
 
     @Override
@@ -160,32 +156,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getEvents(GetEventsCriteria getEventsCriteria) {
-//        CriteriaBuilder cb = em.getCriteriaBuilder();
-//        CriteriaQuery<Event> cq = cb.createQuery(Event.class);
-//
-//        Root<Event> event = cq.from(Event.class);
-//        List<Predicate> predicates = new ArrayList<>();
-//
-//        predicates.add(cb.like(event.get("description"), getEventsCriteria.getText()));
-//        predicates.add(cb.like(event.get("annotation"), getEventsCriteria.getText()));
-//        predicates.add(event.get("category_id").in(getEventsCriteria.getCategories()));
-//        if(getEventsCriteria.getPaid()) {
-//            predicates.add(cb.equal(event.get("paid"), getEventsCriteria.getPaid()));
-//        }
-//        predicates.add(cb.between(event.get("event_date"), getEventsCriteria.getRangeStart(), getEventsCriteria.getRangeEnd()));
-//        if(getEventsCriteria.getOnlyAvailable()) {
-//            predicates.add(cb.lessThan(event.get("confirmed_requests"), event.get("participant_limit")));
-//        }
-//        String strSort = null;
-//        switch (getEventsCriteria.getSort()) {
-//            case EVENT_DATE:
-//                strSort = "event_date";
-//                break;
-//            case VIEWS:
-//                strSort = "views";
-//        }
-//        PageRequest pageable = PageRequest.of(getEventsCriteria.getFrom(), getEventsCriteria.getSize(), Sort.by(strSort).ascending());
-
         List<Event> events = eventRepository.findTest(getEventsCriteria);
         return events.stream()
                 .map(EventMapper::mapToEventShortDto)
@@ -210,7 +180,7 @@ public class EventServiceImpl implements EventService {
         event.setRequestModeration(eventDto.getRequestModeration() != null ? eventDto.getRequestModeration() : event.isRequestModeration());
         event.setTitle(eventDto.getTitle() != null ? eventDto.getTitle() : event.getTitle());
 
-        if (eventDto.getStateAction() != null){
+        if (eventDto.getStateAction() != null) {
             State state = null;
             StateAction stateAction = eventDto.getStateAction();
             switch (stateAction) {
@@ -241,8 +211,10 @@ public class EventServiceImpl implements EventService {
     }
 
     private Location checkLocation(LocationDto locationDto) {
-        return locationRepository.findLocationByLatAndLon(locationDto.getLat(), locationDto.getLon())
-                .orElse(locationRepository.save(LocationMapper.mapToLocation(locationDto)));
+        //точность определения существования координат в бд
+        float accuracy = 1e-11f;
+        Optional<Location> location = locationRepository.findLocationByLatAndLon(locationDto.getLat(), locationDto.getLon(), accuracy);
+        return location.orElseGet(() -> locationRepository.save(LocationMapper.mapToLocation(locationDto)));
     }
 
     private void checkEventTime(LocalDateTime eventTime) {

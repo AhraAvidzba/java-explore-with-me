@@ -8,16 +8,21 @@ import java.util.List;
 public interface EventService {
     //Приватные методы
     List<EventShortDto> getUserEvents(int from, int size, Long userId);
+
     EventOutDto addEvent(EventInDto eventInDto, Long userId);
+
     EventOutDto getFullUserEvent(Long eventId, Long userId);
+
     EventOutDto editEvent(UpdateEventRequestDto event, Long userId, Long eventId);
+
     List<ParticipationRequestDto> getRequestsForUserEvent(Long eventId, Long userId);
+
     EventRequestStatusUpdateResult changeStatusForUserEventsRequests(EventRequestStatusUpdateRequest requestsAndStatus, Long eventId, Long userId);
 
     //Публичные методы
     List<EventShortDto> getEvents(GetEventsCriteria getEventsCriteria);
-    EventOutDto getFullEventById(Long eventId);
 
+    EventOutDto getFullEventById(Long eventId);
 
 
     //Методы для админов

@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.ewm.category.dto.CategoryOutDto;
 import ru.practicum.ewm.event.StateAction;
 import ru.practicum.ewm.location.dto.LocationDto;
 

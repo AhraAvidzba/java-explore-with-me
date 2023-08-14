@@ -19,9 +19,6 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 
 @SpringBootTest(
         properties = "spring.datasource.url=jdbc:h2:mem:ewm",
@@ -58,13 +55,12 @@ class CategoryServiceITest {
                 makeCategoryInDto("Еда")
         );
 
-        List<CategoryOutDto> savedCategories  = new ArrayList<>();
+        List<CategoryOutDto> savedCategories = new ArrayList<>();
         sourceCategories.forEach(x -> {
-                    CategoryOutDto categoryInDto = categoryService.addCategory(x);
-                    savedCategories.add(categoryInDto);
-                });
+            CategoryOutDto categoryInDto = categoryService.addCategory(x);
+            savedCategories.add(categoryInDto);
+        });
         Long savedId = savedCategories.get(0).getId();
-        List<CategoryOutDto> categories2 = categoryService.getCategories(0, 10);
         CategoryInDto categoryInDto = makeCategoryInDto("Кино");
         //when...then
         Assertions.assertThrows(
@@ -138,7 +134,7 @@ class CategoryServiceITest {
 
     private CategoryInDto makeCategoryInDto(String name) {
         return CategoryInDto.builder()
-        .name(name)
-        .build();
+                .name(name)
+                .build();
     }
 }

@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -46,7 +46,7 @@ class RequestServiceImplTest {
                 .thenReturn(Optional.of(createUser()));
         when(requestRepository.findRequestByRequesterId(anyLong()))
                 .thenReturn(List.of(createRequest()));
-        List<ParticipationRequestDto>  requests = requestService.getRequests(1L);
+        List<ParticipationRequestDto> requests = requestService.getRequests(1L);
         assertThat(requests.size(), equalTo(1));
         assertThat(requests.get(0).getRequester(), equalTo(1L));
     }

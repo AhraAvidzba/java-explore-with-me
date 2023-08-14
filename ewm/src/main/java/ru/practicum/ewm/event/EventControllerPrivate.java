@@ -22,8 +22,8 @@ public class EventControllerPrivate {
 
     @GetMapping
     public List<EventShortDto> getUserEvents(@PositiveOrZero @RequestParam(defaultValue = "0") int from,
-                                         @Positive @RequestParam(defaultValue = "10") int size,
-                                         @PathVariable Long userId) {
+                                             @Positive @RequestParam(defaultValue = "10") int size,
+                                             @PathVariable Long userId) {
         List<EventShortDto> eventShortsDto = eventService.getUserEvents(from, size, userId);
         log.info("Возвращается список с краткой информацией о событии");
         return eventShortsDto;
@@ -57,7 +57,7 @@ public class EventControllerPrivate {
 
     @GetMapping("/{eventId}/requests")
     public List<ParticipationRequestDto> getRequestsForUserEvent(@PathVariable Long userId,
-                                        @PathVariable Long eventId) {
+                                                                 @PathVariable Long eventId) {
         List<ParticipationRequestDto> participationRequestDto = eventService.getRequestsForUserEvent(eventId, userId);
         log.info("Возвращается все запросы на участие для запрашиваемого события");
         return participationRequestDto;
@@ -65,8 +65,8 @@ public class EventControllerPrivate {
 
     @PatchMapping("/{eventId}/requests")
     public EventRequestStatusUpdateResult changeStatusForUserEventsRequests(@RequestBody EventRequestStatusUpdateRequest requestsAndStatus,
-                                 @PathVariable Long userId,
-                                 @PathVariable Long eventId) {
+                                                                            @PathVariable Long userId,
+                                                                            @PathVariable Long eventId) {
         EventRequestStatusUpdateResult eventRequestStatusUpdateResult = eventService.changeStatusForUserEventsRequests(requestsAndStatus, eventId, userId);
         log.info("Статус запросов на участие в событии изменен");
         return eventRequestStatusUpdateResult;

@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.practicum.ewm.user.dto.UserInDto;
 import ru.practicum.ewm.user.dto.UserDto;
+import ru.practicum.ewm.user.dto.UserInDto;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -49,8 +49,8 @@ class UserServiceITest {
 
     private UserInDto makeShortUserDto(String email, String name) {
         return UserInDto.builder()
-        .email(email)
-        .name(name)
-        .build();
+                .email(email)
+                .name(name)
+                .build();
     }
 }
