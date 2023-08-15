@@ -14,11 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminGetEventsCriteria {
-    @NotNull
     private List<Long> users;
-    @NotNull
     private List<State> states;
-    @NotNull
     private List<Long> categories;
     private String rangeStart;
     private String rangeEnd;

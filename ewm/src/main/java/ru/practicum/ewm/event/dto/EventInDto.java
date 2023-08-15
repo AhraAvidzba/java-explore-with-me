@@ -21,8 +21,8 @@ public class EventInDto {
     private String annotation;
     @NotNull
     private Long category;
-    @NotNull
     @Length(min = 20, max = 7000)
+    @NotNull
     private String description;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull

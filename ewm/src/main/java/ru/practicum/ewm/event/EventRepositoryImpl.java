@@ -30,12 +30,14 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Event> cq = cb.createQuery(Event.class);
         Root<Event> root = cq.from(Event.class);
-
-        Predicate titlePredicate = cb.like(cb.lower(root.get("title")), "%" + publicGetEventsCriteria.getText().toLowerCase() + "%");
-        Predicate annotationPredicate = cb.like(cb.lower(root.get("annotation")), "%" + publicGetEventsCriteria.getText().toLowerCase() + "%");
-
-        predicatesList.add(cb.or(titlePredicate, annotationPredicate));
-        predicatesList.add(root.get("category").in(publicGetEventsCriteria.getCategories()));
+        if (publicGetEventsCriteria.getText() != null) {
+            Predicate titlePredicate = cb.like(cb.lower(root.get("title")), "%" + publicGetEventsCriteria.getText().toLowerCase() + "%");
+            Predicate annotationPredicate = cb.like(cb.lower(root.get("annotation")), "%" + publicGetEventsCriteria.getText().toLowerCase() + "%");
+            predicatesList.add(cb.or(titlePredicate, annotationPredicate));
+        }
+        if (publicGetEventsCriteria.getCategories() != null) {
+            predicatesList.add(root.get("category").in(publicGetEventsCriteria.getCategories()));
+        }
         predicatesList.add(cb.equal(root.get("state"), State.PUBLISHED));
 
         setDatePredicates(cb, root, publicGetEventsCriteria.getRangeStart(), publicGetEventsCriteria.getRangeEnd(), predicatesList);
@@ -51,15 +53,19 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
         cq.where(predicatesArray);
 
         String strSort = null;
-        switch (publicGetEventsCriteria.getSort()) {
-            case EVENT_DATE:
-                strSort = "eventDate";
-                break;
-            case VIEWS:
-                strSort = "views";
+        if (publicGetEventsCriteria.getSort() != null) {
+            switch (publicGetEventsCriteria.getSort()) {
+                case EVENT_DATE:
+                    strSort = "eventDate";
+                    break;
+                case VIEWS:
+                    strSort = "views";
+            }
+            cq.orderBy(cb.asc(root.get(strSort)));
+        } else {
+            cq.orderBy(cb.asc(root.get("id")));
         }
 
-        cq.orderBy(cb.asc(root.get(strSort)));
         TypedQuery<Event> query = em.createQuery(cq);
 
         return query
@@ -77,9 +83,15 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
 
         Root<Event> root = cq.from(Event.class);
 
-        predicatesList.add(root.get("initiator").in(adminGetEventsCriteria.getUsers()));
-        predicatesList.add(root.get("state").in(adminGetEventsCriteria.getStates()));
-        predicatesList.add(root.get("category").in(adminGetEventsCriteria.getCategories()));
+        if (adminGetEventsCriteria.getUsers() != null) {
+            predicatesList.add(root.get("initiator").in(adminGetEventsCriteria.getUsers()));
+        }
+        if (adminGetEventsCriteria.getStates() != null) {
+            predicatesList.add(root.get("state").in(adminGetEventsCriteria.getStates()));
+        }
+        if (adminGetEventsCriteria.getCategories() != null) {
+            predicatesList.add(root.get("category").in(adminGetEventsCriteria.getCategories()));
+        }
 
         setDatePredicates(cb, root, adminGetEventsCriteria.getRangeStart(), adminGetEventsCriteria.getRangeEnd(), predicatesList);
 

@@ -100,9 +100,10 @@ public class EventServiceImpl implements EventService {
         if (!userId.equals(event.getInitiator().getId())) {
             throw new UnavailableOperationException("Просматривать полную информацию о событии может только его инициатор");
         }
-        checkEventTime(eventDto.getEventDate(), LocalDateTime.now(), 2);
+        LocalDateTime eventTime = eventDto.getEventDate() != null ? eventDto.getEventDate() : event.getEventDate();
+        checkEventTime(eventTime, LocalDateTime.now(), 2);
         if (State.PUBLISHED.equals(event.getState())) {
-            throw new UnavailableOperationException("Статус события должен быть отмененным или ожидающим модерацию");
+            throw new ContentAlreadyExistException("Статус события должен быть отмененным или ожидающим модерацию");
         }
         State state = null;
         if (eventDto.getStateAction() != null) {
@@ -205,12 +206,13 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventOutDto editEventByAdmin(UpdateEventRequestDto eventDto, Long eventId) {
         Event event = checkEvent(eventId);
-        checkEventTime(eventDto.getEventDate(), LocalDateTime.now(), 1);
+        LocalDateTime eventTime = eventDto.getEventDate() != null ? eventDto.getEventDate() : event.getEventDate();
+        checkEventTime(eventTime, LocalDateTime.now(), 1);
         if (StateAction.PUBLISH_EVENT.equals(eventDto.getStateAction()) && !State.PENDING.equals(event.getState())) {
-            throw new UnavailableOperationException("Событие можно публиковать, только если оно в состоянии ожидания публикации.");
+            throw new ContentAlreadyExistException("Событие можно публиковать, только если оно в состоянии ожидания публикации.");
         }
         if (StateAction.REJECT_EVENT.equals(eventDto.getStateAction()) && State.PUBLISHED.equals(event.getState())) {
-            throw new UnavailableOperationException("Событие можно отклонить, только если оно еще не опубликовано.");
+            throw new ContentAlreadyExistException("Событие можно отклонить, только если оно еще не опубликовано.");
         }
         State state = null;
         if (eventDto.getStateAction() != null) {
@@ -270,8 +272,8 @@ public class EventServiceImpl implements EventService {
     }
 
     private void checkEventTime(LocalDateTime eventTime, LocalDateTime comparedTime, int hoursReserve) {
-        if (eventTime.isBefore(comparedTime.plusHours(hoursReserve))) {
-            throw new UnavailableOperationException("Время начала публикуемого события не может быть раньше, чем через " + hoursReserve + " час/a от текущего момента");
+        if (eventTime.isBefore(LocalDateTime.now()) || eventTime.isBefore(comparedTime.plusHours(hoursReserve))) {
+            throw new ContentAlreadyExistException("Поле eventDate должно содержать дату, которая еще не наступила и не может быть раньше, чем через " + hoursReserve + " час/a от текущего момента.");
         }
     }
 

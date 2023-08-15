@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -31,7 +32,7 @@ public class EventControllerPrivate {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public EventOutDto addEvent(@RequestBody EventInDto eventInDto,
+    public EventOutDto addEvent(@Valid @RequestBody EventInDto eventInDto,
                                 @PathVariable Long userId) {
         EventOutDto eventOutDto = eventService.addEvent(eventInDto, userId);
         log.info("Событие добавлено");
@@ -47,7 +48,7 @@ public class EventControllerPrivate {
     }
 
     @PatchMapping("/{eventId}")
-    public EventOutDto editEvent(@RequestBody UpdateEventRequestDto eventDto,
+    public EventOutDto editEvent(@Valid @RequestBody UpdateEventRequestDto eventDto,
                                  @PathVariable Long userId,
                                  @PathVariable Long eventId) {
         EventOutDto eventOutDto = eventService.editEvent(eventDto, userId, eventId);
@@ -64,7 +65,7 @@ public class EventControllerPrivate {
     }
 
     @PatchMapping("/{eventId}/requests")
-    public EventRequestStatusUpdateResult changeStatusForUserEventsRequests(@RequestBody EventRequestStatusUpdateRequest requestsAndStatus,
+    public EventRequestStatusUpdateResult changeStatusForUserEventsRequests(@Valid @RequestBody EventRequestStatusUpdateRequest requestsAndStatus,
                                                                             @PathVariable Long userId,
                                                                             @PathVariable Long eventId) {
         EventRequestStatusUpdateResult eventRequestStatusUpdateResult = eventService.changeStatusForUserEventsRequests(requestsAndStatus, eventId, userId);

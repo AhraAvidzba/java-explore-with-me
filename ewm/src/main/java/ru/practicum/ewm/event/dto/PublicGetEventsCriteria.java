@@ -15,15 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PublicGetEventsCriteria {
-    @NotBlank
     private String text;
-    @NotNull
     private List<Long> categories;
     private Boolean paid;
     private String rangeStart;
     private String rangeEnd;
     private Boolean onlyAvailable = false;
-    @NotNull
     private Sort sort;
     @PositiveOrZero
     private int from = 0;
