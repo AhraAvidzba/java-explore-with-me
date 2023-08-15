@@ -2,10 +2,11 @@ package ru.practicum.ewm.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.event.dto.*;
+import ru.practicum.ewm.event.dto.AdminGetEventsCriteria;
+import ru.practicum.ewm.event.dto.EventOutDto;
+import ru.practicum.ewm.event.dto.UpdateEventRequestDto;
 
 import javax.validation.Valid;
 import java.util.List;

@@ -49,7 +49,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventOutDto addEvent(EventInDto eventInDto, Long userId) {
-        checkEventTime(eventInDto.getEventDate());
+        checkEventTime(eventInDto.getEventDate(), LocalDateTime.now(), 2);
         Category category = categoryRepository.findById(eventInDto.getCategory())
                 .orElseThrow(() -> new ContentNotFoundException("Катагория не найдена"));
         User user = checkUser(userId);
@@ -99,11 +99,25 @@ public class EventServiceImpl implements EventService {
         if (!userId.equals(event.getInitiator().getId())) {
             throw new UnavailableOperationException("Просматривать полную информацию о событии может только его инициатор");
         }
-        checkEventTime(eventDto.getEventDate());
-        if (event.getState().equals(State.PUBLISHED)) {
+        checkEventTime(eventDto.getEventDate(), LocalDateTime.now(), 2);
+        if (State.PUBLISHED.equals(event.getState())) {
             throw new UnavailableOperationException("Статус события должен быть отмененным или ожидающим модерацию");
         }
-        updateNonNullFields(event, eventDto);
+        State state = null;
+        if (eventDto.getStateAction() != null) {
+            StateAction stateAction = eventDto.getStateAction();
+            switch (stateAction) {
+                case SEND_TO_REVIEW:
+                    state = State.PENDING;
+                    break;
+                case CANCEL_REVIEW:
+                    state = State.CANCELED;
+                    break;
+                default:
+                    throw new UnavailableOperationException("Недопустимый формат state");
+            }
+        }
+        updateNonNullFields(event, eventDto, state);
         Event updatedEvent = eventRepository.save(event);
         return EventMapper.mapToEventOutDto(updatedEvent);
     }
@@ -186,20 +200,33 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventOutDto editEventByAdmin(UpdateEventRequestDto eventDto, Long eventId) {
         Event event = checkEvent(eventId);
-//        checkEventTime(eventDto.getEventDate());
-        if (eventDto.getStateAction().equals(StateAction.PUBLISH_EVENT) && !event.getState().equals(State.PENDING)) {
+        checkEventTime(eventDto.getEventDate(), LocalDateTime.now(), 1);
+        if (StateAction.PUBLISH_EVENT.equals(eventDto.getStateAction()) && !State.PENDING.equals(event.getState())) {
             throw new UnavailableOperationException("Событие можно публиковать, только если оно в состоянии ожидания публикации.");
         }
-        if (eventDto.getStateAction().equals(StateAction.REJECT_EVENT) && event.getState().equals(State.PUBLISHED)) {
+        if (StateAction.REJECT_EVENT.equals(eventDto.getStateAction()) && State.PUBLISHED.equals(event.getState())) {
             throw new UnavailableOperationException("Событие можно отклонить, только если оно еще не опубликовано.");
         }
-//        updateNonNullFields(event, eventDto);
-//        Event updatedEvent = eventRepository.save(event);
-//        return EventMapper.mapToEventOutDto(updatedEvent);
-        return null;
+        State state = null;
+        if (eventDto.getStateAction() != null) {
+            StateAction stateAction = eventDto.getStateAction();
+            switch (stateAction) {
+                case PUBLISH_EVENT:
+                    state = State.PUBLISHED;
+                    break;
+                case REJECT_EVENT:
+                    state = State.CANCELED;
+                    break;
+                default:
+                    throw new UnavailableOperationException("Недопустимый формат state");
+            }
+        }
+        updateNonNullFields(event, eventDto, state);
+        Event updatedEvent = eventRepository.save(event);
+        return EventMapper.mapToEventOutDto(updatedEvent);
     }
 
-    private void updateNonNullFields(Event event, UpdateEventRequestDto eventDto) {
+    private void updateNonNullFields(Event event, UpdateEventRequestDto eventDto, State state) {
         Category category = checkCategory(eventDto.getCategory());
         Location location = checkLocation(eventDto.getLocation());
         event.setAnnotation(eventDto.getAnnotation() != null ? eventDto.getAnnotation() : event.getAnnotation());
@@ -211,21 +238,8 @@ public class EventServiceImpl implements EventService {
         event.setParticipantLimit(eventDto.getParticipantLimit() != null ? eventDto.getParticipantLimit() : event.getParticipantLimit());
         event.setRequestModeration(eventDto.getRequestModeration() != null ? eventDto.getRequestModeration() : event.isRequestModeration());
         event.setTitle(eventDto.getTitle() != null ? eventDto.getTitle() : event.getTitle());
-
-        if (eventDto.getStateAction() != null) {
-            State state = null;
-            StateAction stateAction = eventDto.getStateAction();
-            switch (stateAction) {
-                case SEND_TO_REVIEW:
-                    state = State.PENDING;
-                    break;
-                case CANCEL_REVIEW:
-                    state = State.CANCELED;
-            }
-            event.setState(state);
-            event.setPublishedOn(null);
-        }
-
+        event.setState(state != null ? state : event.getState());
+        event.setPublishedOn(State.PUBLISHED.equals(state) ? LocalDateTime.now() : null);
     }
 
     private User checkUser(Long userId) {
@@ -250,9 +264,9 @@ public class EventServiceImpl implements EventService {
         return location.orElseGet(() -> locationRepository.save(LocationMapper.mapToLocation(locationDto)));
     }
 
-    private void checkEventTime(LocalDateTime eventTime) {
-        if (eventTime.isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new UnavailableOperationException("Время начала публикуемого события не может быть раньше, чем через два часа от текущего момента");
+    private void checkEventTime(LocalDateTime eventTime, LocalDateTime comparedTime, int hoursReserve) {
+        if (eventTime.isBefore(comparedTime.plusHours(hoursReserve))) {
+            throw new UnavailableOperationException("Время начала публикуемого события не может быть раньше, чем через " + hoursReserve + " час/a от текущего момента");
         }
     }
 

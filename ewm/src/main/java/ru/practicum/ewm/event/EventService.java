@@ -26,5 +26,6 @@ public interface EventService {
 
     //Методы для админов
     List<EventOutDto> getFullEvents(AdminGetEventsCriteria adminGetEventsCriteria);
+
     EventOutDto editEventByAdmin(UpdateEventRequestDto event, Long eventId);
 }

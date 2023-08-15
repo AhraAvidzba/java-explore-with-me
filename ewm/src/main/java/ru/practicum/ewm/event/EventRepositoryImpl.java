@@ -96,7 +96,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
     }
 
     private void setDatePredicates(CriteriaBuilder cb, Root<Event> root, String strRangeStart, String strRangeEnd, List<Predicate> predicatesList) {
-        if  (strRangeStart != null && strRangeEnd != null) {
+        if (strRangeStart != null && strRangeEnd != null) {
             LocalDateTime rangeStart = LocalDateTime.parse(strRangeStart, formatter);
             LocalDateTime rangeEnd = LocalDateTime.parse(strRangeEnd, formatter);
             predicatesList.add(cb.between(root.get("eventDate"), rangeStart, rangeEnd));

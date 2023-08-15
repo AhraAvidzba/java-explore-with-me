@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface EventRepositoryCustom {
     List<Event> findEventsByPublicCriteria(PublicGetEventsCriteria publicGetEventsCriteria);
+
     List<Event> findEventsByAdminCriteria(AdminGetEventsCriteria adminGetEventsCriteria);
 }
