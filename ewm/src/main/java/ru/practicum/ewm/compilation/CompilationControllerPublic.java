@@ -19,9 +19,9 @@ public class CompilationControllerPublic {
     private final CompilationService compilationService;
 
     @GetMapping
-    public List<CompilationDto> getCompilations(@PositiveOrZero @RequestParam boolean pinned,
-                                                @Positive @RequestParam(defaultValue = "0") int from,
-                                                @RequestParam(defaultValue = "10") int size) {
+    public List<CompilationDto> getCompilations(@RequestParam boolean pinned,
+                                                @PositiveOrZero @RequestParam(defaultValue = "0") int from,
+                                                @Positive @RequestParam(defaultValue = "10") int size) {
         List<CompilationDto> compilationDto = compilationService.getCompilations(pinned, from, size);
         log.info("Подборки возвращаются");
         return compilationDto;
