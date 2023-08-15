@@ -35,6 +35,7 @@ public class EventServiceImpl implements EventService {
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
+//    private final StatisticClient statisticClient;
 
 
     @Override
@@ -177,6 +178,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventShortDto> getEvents(PublicGetEventsCriteria publicGetEventsCriteria) {
         List<Event> events = eventRepository.findEventsByPublicCriteria(publicGetEventsCriteria);
+        events.forEach(event -> event.setViews(event.getViews() + 1)); //увеличение количества просмотров на 1 (только у публичного эндпоинта)
+        eventRepository.saveAll(events);
         return events.stream()
                 .map(EventMapper::mapToEventShortDto)
                 .collect(Collectors.toList());
@@ -186,6 +189,8 @@ public class EventServiceImpl implements EventService {
     public EventOutDto getFullEventById(Long eventId) {
         Event event = eventRepository.findEventByIdAndState(eventId, State.PUBLISHED)
                 .orElseThrow(() -> new ContentNotFoundException("Опубликованного события с id " + eventId + " не найдено."));
+        event.setViews(event.getViews() + 1); //увеличение количества просмотров на 1 (только у публичного эндпоинта)
+        eventRepository.save(event);
         return EventMapper.mapToEventOutDto(event);
     }
 
