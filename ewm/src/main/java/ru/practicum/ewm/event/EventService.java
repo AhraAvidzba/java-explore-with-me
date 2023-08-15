@@ -20,11 +20,11 @@ public interface EventService {
     EventRequestStatusUpdateResult changeStatusForUserEventsRequests(EventRequestStatusUpdateRequest requestsAndStatus, Long eventId, Long userId);
 
     //Публичные методы
-    List<EventShortDto> getEvents(GetEventsCriteria getEventsCriteria);
+    List<EventShortDto> getEvents(PublicGetEventsCriteria publicGetEventsCriteria);
 
     EventOutDto getFullEventById(Long eventId);
 
-
     //Методы для админов
-
+    List<EventOutDto> getFullEvents(AdminGetEventsCriteria adminGetEventsCriteria);
+    EventOutDto editEventByAdmin(UpdateEventRequestDto event, Long eventId);
 }

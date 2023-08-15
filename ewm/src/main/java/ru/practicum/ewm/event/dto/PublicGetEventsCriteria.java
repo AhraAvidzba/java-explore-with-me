@@ -14,19 +14,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetEventsCriteria {
+public class PublicGetEventsCriteria {
     @NotBlank
     private String text;
     @NotNull
     private List<Long> categories;
     private Boolean paid;
-    @NotNull
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//    private LocalDateTime rangeStart; // = LocalDateTime.now().minusDays(10000);
     private String rangeStart;
-    @NotNull
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//    private LocalDateTime rangeEnd; // = LocalDateTime.now().plusDays(10000);
     private String rangeEnd;
     private Boolean onlyAvailable = false;
     @NotNull

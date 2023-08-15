@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.ewm.event.dto.EventOutDto;
 import ru.practicum.ewm.event.dto.EventShortDto;
-import ru.practicum.ewm.event.dto.GetEventsCriteria;
+import ru.practicum.ewm.event.dto.PublicGetEventsCriteria;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -23,8 +23,8 @@ public class EventControllerPublic {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventShortDto> getUserEvents(@Valid GetEventsCriteria getEventsCriteria) {
-        List<EventShortDto> eventShortsDto = eventService.getEvents(getEventsCriteria);
+    public List<EventShortDto> getEvents(@Valid PublicGetEventsCriteria publicGetEventsCriteria) {
+        List<EventShortDto> eventShortsDto = eventService.getEvents(publicGetEventsCriteria);
         log.info("Возвращается список с краткой информацией о событии");
         return eventShortsDto;
     }

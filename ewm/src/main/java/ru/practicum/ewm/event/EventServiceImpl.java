@@ -54,6 +54,12 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new ContentNotFoundException("Катагория не найдена"));
         User user = checkUser(userId);
         Location location = checkLocation(eventInDto.getLocation());
+        State state = State.PENDING;
+        LocalDateTime publishedOn = null;
+        if (!eventInDto.isRequestModeration()) {
+            state = State.PUBLISHED;
+            publishedOn = LocalDateTime.now();
+        }
         Event event = Event.builder()
                 .annotation(eventInDto.getAnnotation())
                 .category(category)
@@ -68,8 +74,8 @@ public class EventServiceImpl implements EventService {
                 .confirmedRequests(0)
                 .createdOn(LocalDateTime.now())
                 .initiator(user)
-                .publishedOn(null)
-                .state(State.PENDING)
+                .publishedOn(publishedOn)
+                .state(state)
                 .views(0)
                 .build();
         Event savedEvent = eventRepository.save(event);
@@ -94,7 +100,7 @@ public class EventServiceImpl implements EventService {
             throw new UnavailableOperationException("Просматривать полную информацию о событии может только его инициатор");
         }
         checkEventTime(eventDto.getEventDate());
-        if (event.getState().equals(State.CANCELED) || event.getState().equals(State.PENDING)) {
+        if (event.getState().equals(State.PUBLISHED)) {
             throw new UnavailableOperationException("Статус события должен быть отмененным или ожидающим модерацию");
         }
         updateNonNullFields(event, eventDto);
@@ -155,8 +161,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventShortDto> getEvents(GetEventsCriteria getEventsCriteria) {
-        List<Event> events = eventRepository.findEventsByCriteria(getEventsCriteria);
+    public List<EventShortDto> getEvents(PublicGetEventsCriteria publicGetEventsCriteria) {
+        List<Event> events = eventRepository.findEventsByPublicCriteria(publicGetEventsCriteria);
         return events.stream()
                 .map(EventMapper::mapToEventShortDto)
                 .collect(Collectors.toList());
@@ -164,6 +170,32 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventOutDto getFullEventById(Long eventId) {
+        Event event = eventRepository.findEventByIdAndState(eventId, State.PUBLISHED)
+                .orElseThrow(() -> new ContentNotFoundException("Опубликованного события с id " + eventId + " не найдено."));
+        return EventMapper.mapToEventOutDto(event);
+    }
+
+    @Override
+    public List<EventOutDto> getFullEvents(AdminGetEventsCriteria adminGetEventsCriteria) {
+        List<Event> events = eventRepository.findEventsByAdminCriteria(adminGetEventsCriteria);
+        return events.stream()
+                .map(EventMapper::mapToEventOutDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public EventOutDto editEventByAdmin(UpdateEventRequestDto eventDto, Long eventId) {
+        Event event = checkEvent(eventId);
+//        checkEventTime(eventDto.getEventDate());
+        if (eventDto.getStateAction().equals(StateAction.PUBLISH_EVENT) && !event.getState().equals(State.PENDING)) {
+            throw new UnavailableOperationException("Событие можно публиковать, только если оно в состоянии ожидания публикации.");
+        }
+        if (eventDto.getStateAction().equals(StateAction.REJECT_EVENT) && event.getState().equals(State.PUBLISHED)) {
+            throw new UnavailableOperationException("Событие можно отклонить, только если оно еще не опубликовано.");
+        }
+//        updateNonNullFields(event, eventDto);
+//        Event updatedEvent = eventRepository.save(event);
+//        return EventMapper.mapToEventOutDto(updatedEvent);
         return null;
     }
 
@@ -191,6 +223,7 @@ public class EventServiceImpl implements EventService {
                     state = State.CANCELED;
             }
             event.setState(state);
+            event.setPublishedOn(null);
         }
 
     }
