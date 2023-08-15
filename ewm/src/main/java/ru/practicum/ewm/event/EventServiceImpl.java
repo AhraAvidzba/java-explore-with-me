@@ -19,6 +19,7 @@ import ru.practicum.ewm.request.RequestRepository;
 import ru.practicum.ewm.request.Status;
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 import ru.practicum.ewm.request.dto.RequestMapper;
+import ru.practicum.ewm.statistic.StatisticClient;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
 
@@ -35,7 +36,6 @@ public class EventServiceImpl implements EventService {
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
-//    private final StatisticClient statisticClient;
 
 
     @Override
