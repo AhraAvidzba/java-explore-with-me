@@ -22,9 +22,9 @@ public class UserControllerAdmin {
     private final UserService userService;
 
     @GetMapping
-    public List<UserDto> getUsers(@PositiveOrZero @RequestParam(defaultValue = "-1") List<Long> ids,
-                                  @Positive @RequestParam(defaultValue = "0") int from,
-                                  @RequestParam(defaultValue = "10") int size) {
+    public List<UserDto> getUsers(@RequestParam(defaultValue = "-1") List<Long> ids,
+                                  @PositiveOrZero @RequestParam(defaultValue = "0") int from,
+                                  @Positive @RequestParam(defaultValue = "10") int size) {
         log.info("Возвращается список запрашиваемых пользователей");
         return userService.getUsers(ids, from, size);
     }

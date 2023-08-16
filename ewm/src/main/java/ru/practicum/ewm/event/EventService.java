@@ -1,5 +1,6 @@
 package ru.practicum.ewm.event;
 
+import ru.practicum.ewm.dtos.StatisticInDto;
 import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 
@@ -20,9 +21,9 @@ public interface EventService {
     EventRequestStatusUpdateResult changeStatusForUserEventsRequests(EventRequestStatusUpdateRequest requestsAndStatus, Long eventId, Long userId);
 
     //Публичные методы
-    List<EventShortDto> getEvents(PublicGetEventsCriteria publicGetEventsCriteria);
+    List<EventShortDto> getEvents(PublicGetEventsCriteria publicGetEventsCriteria, StatisticInDto statisticInDto);
 
-    EventOutDto getFullEventById(Long eventId);
+    EventOutDto getFullEventById(Long eventId, StatisticInDto statisticInDto);
 
     //Методы для админов
     List<EventOutDto> getFullEvents(AdminGetEventsCriteria adminGetEventsCriteria);

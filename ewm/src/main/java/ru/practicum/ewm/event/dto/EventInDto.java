@@ -29,10 +29,9 @@ public class EventInDto {
     private LocalDateTime eventDate;
     @NotNull
     private LocationDto location;
-    @NotNull
-    private Boolean paid;
+    private Boolean paid = false;
     private int participantLimit;
-    private boolean requestModeration;
+    private Boolean requestModeration = true;
     @NotBlank
     @Length(min = 3, max = 120)
     private String title;

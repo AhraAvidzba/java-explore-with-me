@@ -11,7 +11,6 @@ import ru.practicum.ewm.dtos.StatisticInDto;
 import ru.practicum.ewm.event.dto.EventOutDto;
 import ru.practicum.ewm.event.dto.EventShortDto;
 import ru.practicum.ewm.event.dto.PublicGetEventsCriteria;
-import ru.practicum.ewm.statistic.StatisticClient;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -25,37 +24,32 @@ import java.util.List;
 @Validated
 public class EventControllerPublic {
     private final EventService eventService;
-    private final StatisticClient statisticClient;
 
     @GetMapping
     public List<EventShortDto> getEvents(@Valid PublicGetEventsCriteria publicGetEventsCriteria,
                                          HttpServletRequest request) {
-        List<EventShortDto> eventShortsDto = eventService.getEvents(publicGetEventsCriteria);
-        log.info("Возвращается список с краткой информацией о событии");
-        //СОХРАНЕНИЯ СТАТИСТИКИ
         StatisticInDto statisticInDto = StatisticInDto.builder()
                 .app("explore-with-me")
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
                 .timestamp(LocalDateTime.now())
                 .build();
-        statisticClient.addStatistic(statisticInDto);
+        List<EventShortDto> eventShortsDto = eventService.getEvents(publicGetEventsCriteria, statisticInDto);
+        log.info("Возвращается список с краткой информацией о событии");
         return eventShortsDto;
     }
 
     @GetMapping("/{id}")
     public EventOutDto getFullEventById(@PathVariable(name = "id") Long eventId,
                                         HttpServletRequest request) {
-        EventOutDto eventOutDto = eventService.getFullEventById(eventId);
-        log.info("Возвращается полная информация о событии");
-        //СОХРАНЕНИЯ СТАТИСТИКИ
         StatisticInDto statisticInDto = StatisticInDto.builder()
                 .app("explore-with-me")
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
                 .timestamp(LocalDateTime.now())
                 .build();
-        statisticClient.addStatistic(statisticInDto);
+        EventOutDto eventOutDto = eventService.getFullEventById(eventId, statisticInDto);
+        log.info("Возвращается полная информация о событии");
         return eventOutDto;
     }
 }

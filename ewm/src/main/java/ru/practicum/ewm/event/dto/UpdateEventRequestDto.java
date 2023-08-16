@@ -1,9 +1,7 @@
 package ru.practicum.ewm.event.dto;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 import ru.practicum.ewm.event.StateAction;
 import ru.practicum.ewm.location.dto.LocationDto;
 
@@ -13,11 +11,15 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 public class UpdateEventRequestDto {
     private String annotation;
     private Long category;
     private String description;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocationDto location;
     private Boolean paid;
     private Integer participantLimit;

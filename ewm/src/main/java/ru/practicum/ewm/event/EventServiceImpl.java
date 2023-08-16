@@ -6,6 +6,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.category.Category;
 import ru.practicum.ewm.category.CategoryRepository;
+import ru.practicum.ewm.dtos.StatisticInDto;
+import ru.practicum.ewm.dtos.StatisticWithHitsDto;
 import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.exceptions.ContentAlreadyExistException;
 import ru.practicum.ewm.exceptions.ContentNotFoundException;
@@ -36,6 +38,7 @@ public class EventServiceImpl implements EventService {
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
+    private final StatisticClient statisticClient;
 
 
     @Override
@@ -57,10 +60,6 @@ public class EventServiceImpl implements EventService {
         Location location = checkLocation(eventInDto.getLocation());
         State state = State.PENDING;
         LocalDateTime publishedOn = null;
-        if (!eventInDto.isRequestModeration()) {
-            state = State.PUBLISHED;
-            publishedOn = LocalDateTime.now();
-        }
         Event event = Event.builder()
                 .annotation(eventInDto.getAnnotation())
                 .category(category)
@@ -69,7 +68,7 @@ public class EventServiceImpl implements EventService {
                 .location(location)
                 .paid(eventInDto.getPaid())
                 .participantLimit(eventInDto.getParticipantLimit())
-                .requestModeration(eventInDto.isRequestModeration())
+                .requestModeration(eventInDto.getRequestModeration())
                 .title(eventInDto.getTitle())
                 //дополнительные данные
                 .confirmedRequests(0)
@@ -145,23 +144,31 @@ public class EventServiceImpl implements EventService {
             throw new ContentAlreadyExistException("Лимит на количество участников в этом событии достигнут");
         }
         if (!userId.equals(event.getInitiator().getId())) {
-            throw new ContentAlreadyExistException("Изменять статус запросо на участие в событии может только инициатор события");
+            throw new ContentAlreadyExistException("Изменять статус запроса на участие в событии может только инициатор события");
         }
         List<ParticipationRequest> requests = requestRepository.findRequestByIdInAndEventId(requestsAndStatus.getRequestIds(), eventId);
         if (requests.size() < requestsAndStatus.getRequestIds().size()) {
-            throw new UnavailableOperationException("Не все указанные id в запросах соответствуют запрашиваемому Событию");
+            throw new UnavailableOperationException("Не все указанные id в запросах соответствуют запрашиваемому событию");
         }
         for (ParticipationRequest request : requests) {
-            if (request.getStatus().equals(Status.PENDING)) {
-                if (event.getParticipantLimit() == event.getConfirmedRequests()) {
-                    request.setStatus(requestsAndStatus.getStatus());
-                    request.getEvent().setConfirmedRequests(request.getEvent().getConfirmedRequests() + 1);
-                } else {
+            if (!Status.PENDING.equals(request.getStatus())) {
+                throw new ContentAlreadyExistException("Не все заявки на участие в событии имеют статус ожидания подтверждения");
+            } else {
+                if (Status.CONFIRMED.equals(requestsAndStatus.getStatus())) {
+                    if (event.getParticipantLimit() == 0 || event.getParticipantLimit() > event.getConfirmedRequests()) {
+                        request.setStatus(Status.CONFIRMED);
+                        request.getEvent().setConfirmedRequests(request.getEvent().getConfirmedRequests() + 1);
+                    } else {
+                        request.setStatus(Status.REJECTED);
+                    }
+                } else if (Status.REJECTED.equals(requestsAndStatus.getStatus())) {
                     request.setStatus(Status.REJECTED);
                 }
             }
+
         }
         eventRepository.save(event);
+        requestRepository.saveAll(requests);
         List<ParticipationRequest> confirmedRequests = requests.stream()
                 .filter(x -> x.getStatus().equals(Status.CONFIRMED))
                 .collect(Collectors.toList());
@@ -177,20 +184,33 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventShortDto> getEvents(PublicGetEventsCriteria publicGetEventsCriteria) {
+    public List<EventShortDto> getEvents(PublicGetEventsCriteria publicGetEventsCriteria, StatisticInDto statisticInDto) {
+        if (publicGetEventsCriteria.getCategories() != null) {
+            List<Category> categories = categoryRepository.findByIdIn(publicGetEventsCriteria.getCategories());
+            if (categories.size() != publicGetEventsCriteria.getCategories().size()) {
+                throw new UnavailableOperationException("Проверьте указанные id категорий");
+            }
+        }
         List<Event> events = eventRepository.findEventsByPublicCriteria(publicGetEventsCriteria);
-        events.forEach(event -> event.setViews(event.getViews() + 1)); //увеличение количества просмотров на 1 (только у публичного эндпоинта)
-        eventRepository.saveAll(events);
+        //Сохранение статистики
+        statisticClient.addStatistic(statisticInDto);
         return events.stream()
                 .map(EventMapper::mapToEventShortDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public EventOutDto getFullEventById(Long eventId) {
+    public EventOutDto getFullEventById(Long eventId, StatisticInDto statisticInDto) {
         Event event = eventRepository.findEventByIdAndState(eventId, State.PUBLISHED)
                 .orElseThrow(() -> new ContentNotFoundException("Опубликованного события с id " + eventId + " не найдено."));
-        event.setViews(event.getViews() + 1); //увеличение количества просмотров на 1 (только у публичного эндпоинта)
+        //Сохранение статистики
+        statisticClient.addStatistic(statisticInDto);
+        List<StatisticWithHitsDto> statisticWithHitsDto = statisticClient.getStatistics(
+                "1800-12-11 11:11:11",
+                "3000-12-11 11:11:11",
+                new String[]{statisticInDto.getUri()},
+                true);
+        event.setViews(statisticWithHitsDto.get(0).getHits());
         eventRepository.save(event);
         return EventMapper.mapToEventOutDto(event);
     }
@@ -234,8 +254,8 @@ public class EventServiceImpl implements EventService {
     }
 
     private void updateNonNullFields(Event event, UpdateEventRequestDto eventDto, State state) {
-        Category category = checkCategory(eventDto.getCategory());
-        Location location = checkLocation(eventDto.getLocation());
+        Category category = checkCategory(eventDto.getCategory() != null ? eventDto.getCategory() : event.getCategory().getId());
+        Location location = checkLocation(eventDto.getLocation() != null ? eventDto.getLocation() : LocationMapper.mapToLocationDto(event.getLocation()));
         event.setAnnotation(eventDto.getAnnotation() != null ? eventDto.getAnnotation() : event.getAnnotation());
         event.setCategory(eventDto.getCategory() != null ? category : event.getCategory());
         event.setDescription(eventDto.getDescription() != null ? eventDto.getDescription() : event.getDescription());
@@ -273,7 +293,7 @@ public class EventServiceImpl implements EventService {
 
     private void checkEventTime(LocalDateTime eventTime, LocalDateTime comparedTime, int hoursReserve) {
         if (eventTime.isBefore(LocalDateTime.now()) || eventTime.isBefore(comparedTime.plusHours(hoursReserve))) {
-            throw new ContentAlreadyExistException("Поле eventDate должно содержать дату, которая еще не наступила и не может быть раньше, чем через " + hoursReserve + " час/a от текущего момента.");
+            throw new UnavailableOperationException("Поле eventDate должно содержать дату, которая еще не наступила и не может быть раньше, чем через " + hoursReserve + " час/a от текущего момента.");
         }
     }
 

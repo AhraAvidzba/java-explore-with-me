@@ -1,5 +1,6 @@
 package ru.practicum.ewm.event.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -22,13 +23,14 @@ public class EventOutDto {
     private int confirmedRequests;
     private LocalDateTime createdOn;
     private String description;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
     private UserShortDto initiator;
     private LocationDto location;
-    private boolean paid;
+    private Boolean paid;
     private int participantLimit;
     private LocalDateTime publishedOn;
-    private boolean requestModeration;
+    private Boolean requestModeration;
     private State state;
     private String title;
     private int views;

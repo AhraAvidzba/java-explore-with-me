@@ -1,6 +1,7 @@
 package ru.practicum.ewm.compilation;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 import ru.practicum.ewm.event.Event;
 
 import javax.persistence.*;
@@ -29,5 +30,6 @@ public class Compilation {
     private Boolean pinned;
     @Column
     @NotBlank
+    @Length(min = 1, max = 50)
     private String title;
 }

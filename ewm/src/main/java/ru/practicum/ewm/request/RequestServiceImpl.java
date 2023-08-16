@@ -60,7 +60,7 @@ public class RequestServiceImpl implements RequestService {
                 .created(LocalDateTime.now())
                 .status(Status.PENDING)
                 .build();
-        if (!event.isRequestModeration()) {
+        if (!event.isRequestModeration() || event.getParticipantLimit() == 0) {
             participationRequest.setStatus(Status.CONFIRMED);
             event.setConfirmedRequests(event.getConfirmedRequests() + 1);
             eventRepository.save(event);
@@ -82,10 +82,8 @@ public class RequestServiceImpl implements RequestService {
             Event event = participationRequest.getEvent();
             event.setConfirmedRequests(event.getConfirmedRequests() - 1);
             eventRepository.save(event);
-        } else {
-            throw new ContentNotFoundException("Подтвержденных запросов на участие не найдено");
         }
-        participationRequest.setStatus(Status.PENDING);
+        participationRequest.setStatus(Status.CANCELED);
         return RequestMapper.mapToRequestDto(requestRepository.save(participationRequest));
     }
 }
