@@ -198,11 +198,11 @@ class RequestServiceImplTest {
         assertThat(savedParticipationRequest.getEvent().getConfirmedRequests(), equalTo(0));
         assertThat(savedParticipationRequest.getEvent().getId(), equalTo(1L));
         assertThat(savedParticipationRequest.getRequester().getId(), equalTo(1L));
-        assertThat(savedParticipationRequest.getStatus(), equalTo(Status.PENDING));
+        assertThat(savedParticipationRequest.getStatus(), equalTo(Status.CANCELED));
     }
 
     @Test
-    void cancelRequest_whenRequestNotConfirmed_thenThrowException() {
+    void cancelRequest_whenRequestNotConfirmed_thenChangeStatusToCanceled() {
         //given
         Event event = createEvent();
         event.setConfirmedRequests(1);
@@ -219,13 +219,17 @@ class RequestServiceImplTest {
                 .thenReturn(Optional.of(createUser()));
         when(requestRepository.findById(anyLong()))
                 .thenReturn(Optional.of(participationRequest));
+        when(requestRepository.save(any()))
+                .thenReturn(participationRequest);
+        requestService.cancelRequest(1L, 1L);
         //then
         verify(eventRepository, never()).save(any());
-        verify(requestRepository, never()).save(any());
-
-        Assertions.assertThrows(
-                ContentNotFoundException.class,
-                () -> requestService.cancelRequest(1L, 1L));
+        verify(requestRepository, times(1)).save(requestArgumentCaptor.capture());
+        ParticipationRequest savedParticipationRequest = requestArgumentCaptor.getValue();
+        assertThat(savedParticipationRequest.getEvent().getConfirmedRequests(), equalTo(1));
+        assertThat(savedParticipationRequest.getEvent().getId(), equalTo(1L));
+        assertThat(savedParticipationRequest.getRequester().getId(), equalTo(1L));
+        assertThat(savedParticipationRequest.getStatus(), equalTo(Status.CANCELED));
     }
 
     private User createUser() {
