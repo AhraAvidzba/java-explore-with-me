@@ -40,9 +40,9 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new ContentNotFoundException("Пользователь не найден"));
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ContentNotFoundException("Событие не найдено"));
-        requestRepository.findRequestByRequesterIdAndEventId(userId, eventId)
-                .ifPresent((x) ->
-                {throw new ContentAlreadyExistException("Запрос на участие в данном событии был ранее уже отправлен пользователем");});
+        if (requestRepository.findRequestByRequesterIdAndEventId(userId, eventId).isPresent()) {
+            throw new ContentAlreadyExistException("Запрос на участие в данном событии был ранее уже отправлен пользователем");
+        }
         if (user.getId().equals(event.getInitiator().getId())) {
             throw new ContentAlreadyExistException("Инициатор события не может добавить запрос на участие в своём событии");
         }
