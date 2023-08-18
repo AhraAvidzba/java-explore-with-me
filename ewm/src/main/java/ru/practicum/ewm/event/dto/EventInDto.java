@@ -30,7 +30,7 @@ public class EventInDto {
     @NotNull
     private LocationDto location;
     private Boolean paid = false;
-    private int participantLimit;
+    private Integer participantLimit = 0;
     private Boolean requestModeration = true;
     @NotBlank
     @Length(min = 3, max = 120)

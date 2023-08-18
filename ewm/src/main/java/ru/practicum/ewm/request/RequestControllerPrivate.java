@@ -35,7 +35,7 @@ public class RequestControllerPrivate {
     @ResponseStatus(code = HttpStatus.OK)
     public ParticipationRequestDto cancelRequest(@PathVariable Long userId,
                                                  @PathVariable Long requestId) {
-        log.info("Обновляется апрос на участие в событии");
+        log.info("Обновляется запрос на участие в событии");
         return requestService.cancelRequest(userId, requestId);
     }
 }

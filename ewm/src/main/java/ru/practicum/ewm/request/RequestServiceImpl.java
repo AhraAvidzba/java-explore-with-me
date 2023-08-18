@@ -49,7 +49,7 @@ public class RequestServiceImpl implements RequestService {
         if (!State.PUBLISHED.equals(event.getState())) {
             throw new ContentAlreadyExistException("Событие должно быть опубликованным");
         }
-        if (event.getParticipantLimit() != 0 && event.getParticipantLimit() == event.getConfirmedRequests()) {
+        if (event.getParticipantLimit() != 0 && event.getParticipantLimit() == event.getConfirmedRequests().size()) {
             throw new ContentAlreadyExistException("Лимит на количество участников в этом событии достигнут");
         }
         ParticipationRequest participationRequest = ParticipationRequest.builder()
@@ -58,12 +58,15 @@ public class RequestServiceImpl implements RequestService {
                 .created(LocalDateTime.now())
                 .status(Status.PENDING)
                 .build();
+        ParticipationRequest savedParticipationRequest;
         if (!event.isRequestModeration() || event.getParticipantLimit() == 0) {
             participationRequest.setStatus(Status.CONFIRMED);
-            event.setConfirmedRequests(event.getConfirmedRequests() + 1);
+            event.getConfirmedRequests().add(participationRequest);
+            savedParticipationRequest = requestRepository.save(participationRequest);
             eventRepository.save(event);
+        } else {
+            savedParticipationRequest = requestRepository.save(participationRequest);
         }
-        ParticipationRequest savedParticipationRequest = requestRepository.save(participationRequest);
         return RequestMapper.mapToRequestDto(savedParticipationRequest);
     }
 
@@ -78,7 +81,7 @@ public class RequestServiceImpl implements RequestService {
         }
         if (participationRequest.getStatus().equals(Status.CONFIRMED)) {
             Event event = participationRequest.getEvent();
-            event.setConfirmedRequests(event.getConfirmedRequests() - 1);
+            event.getConfirmedRequests().remove(participationRequest);
             eventRepository.save(event);
         }
         participationRequest.setStatus(Status.CANCELED);

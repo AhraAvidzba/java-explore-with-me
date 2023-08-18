@@ -4,17 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.practicum.ewm.event.dto.AdminGetEventsCriteria;
 import ru.practicum.ewm.event.dto.PublicGetEventsCriteria;
+import ru.practicum.ewm.request.ParticipationRequest;
+import ru.practicum.ewm.request.ParticipationRequest_;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.hibernate.criterion.Projections.count;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,29 +30,76 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
         List<Predicate> predicatesList = new ArrayList<>();
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Event> cq = cb.createQuery(Event.class);
-        Root<Event> root = cq.from(Event.class);
+        CriteriaQuery<Event> cqEvent = cb.createQuery(Event.class);
+        Root<Event> rootEvent = cqEvent.from(Event.class);
+
+
+
+
+//        cqEvent.select(rootEvent)
+//                .where(cb.equal(requestJoin.get("event"), 1));
+//        List<Event> requests = em.createQuery(cqEvent).getResultList();
+
+//        if (publicGetEventsCriteria.getOnlyAvailable()) {
+//            predicatesList.add(
+//                    cb.equal(requestJoin.get("event"), rootEvent.get("id"))
+////                    cb.greaterThan(rootEvent.get("participantLimit"),
+////                    cb.count(cb.equal(requestJoin.get("event"), rootEvent.get("id"))))
+//            );
+//        }
+
+
+//        CriteriaQuery<ParticipationRequest> cqRequest = cb.createQuery(ParticipationRequest.class);
+//        Root<ParticipationRequest> requestRoot = cqRequest.from(ParticipationRequest.class);
+//        Join<ParticipationRequest, Event> eventJoin = requestRoot.join("event");
+//
+//        cqRequest.select(requestRoot)
+//                .where(cb.equal(eventJoin.get("id"), 1));
+//        List<ParticipationRequest> requests = em.createQuery(cqRequest).getResultList();
+
+//        System.out.println("-" .repeat(500));
+//        if (!requests.isEmpty()) {
+//            System.out.println(requests.get(0).getId());
+//        }
+//        System.out.println("-" .repeat(500));
+
+//        if (publicGetEventsCriteria.getOnlyAvailable()) {
+//            predicatesList.add(
+//                    cb.greaterThan(rootEvent.get("participantLimit"),
+//                    cb.count(cb.equal(eventJoin.get("id"), rootEvent.get("id"))))
+//            );
+//        }
+
+
+
         if (publicGetEventsCriteria.getText() != null) {
-            Predicate titlePredicate = cb.like(cb.lower(root.get("title")), "%" + publicGetEventsCriteria.getText().toLowerCase() + "%");
-            Predicate annotationPredicate = cb.like(cb.lower(root.get("annotation")), "%" + publicGetEventsCriteria.getText().toLowerCase() + "%");
+            Predicate titlePredicate = cb.like(cb.lower(rootEvent.get("title")), "%" + publicGetEventsCriteria.getText().toLowerCase() + "%");
+            Predicate annotationPredicate = cb.like(cb.lower(rootEvent.get("annotation")), "%" + publicGetEventsCriteria.getText().toLowerCase() + "%");
             predicatesList.add(cb.or(titlePredicate, annotationPredicate));
         }
         if (publicGetEventsCriteria.getCategories() != null) {
-            predicatesList.add(root.get("category").in(publicGetEventsCriteria.getCategories()));
+            predicatesList.add(rootEvent.get("category").in(publicGetEventsCriteria.getCategories()));
         }
-        predicatesList.add(cb.equal(root.get("state"), State.PUBLISHED));
+        predicatesList.add(cb.equal(rootEvent.get("state"), State.PUBLISHED));
 
-        setDatePredicates(cb, root, publicGetEventsCriteria.getRangeStart(), publicGetEventsCriteria.getRangeEnd(), predicatesList);
+        setDatePredicates(cb, rootEvent, publicGetEventsCriteria.getRangeStart(), publicGetEventsCriteria.getRangeEnd(), predicatesList);
+
+//        if (publicGetEventsCriteria.getOnlyAvailable()) {
+//            predicatesList.add(cb.lessThan(rootEvent.get("confirmedRequests"), rootEvent.get("participantLimit")));
+//        }
+        if (publicGetEventsCriteria.getPaid() != null) {
+            predicatesList.add(cb.equal(rootEvent.get("paid"), publicGetEventsCriteria.getPaid()));
+        }
 
         if (publicGetEventsCriteria.getOnlyAvailable()) {
-            predicatesList.add(cb.lessThan(root.get("confirmedRequests"), root.get("participantLimit")));
-        }
-        if (publicGetEventsCriteria.getPaid() != null) {
-            predicatesList.add(cb.equal(root.get("paid"), publicGetEventsCriteria.getPaid()));
+            Join<Event, ParticipationRequest> requestJoin = rootEvent.join("confirmedRequests", JoinType.LEFT);
+            Expression<Long> count = cb.count(requestJoin.get("id"));
+            cqEvent.groupBy(rootEvent.get("id"));
+            cqEvent.having(cb.or(cb.lessThan(count, rootEvent.get("participantLimit")), cb.equal(rootEvent.get("participantLimit"), 0)));
         }
 
-        Predicate[] predicatesArray = predicatesList.toArray(new Predicate[0]);
-        cq.where(predicatesArray);
+        cqEvent.where(predicatesList.toArray(Predicate[]::new));
+
 
         String strSort = null;
         if (publicGetEventsCriteria.getSort() != null) {
@@ -61,12 +110,12 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
                 case VIEWS:
                     strSort = "views";
             }
-            cq.orderBy(cb.asc(root.get(strSort)));
+            cqEvent.orderBy(cb.asc(rootEvent.get(strSort)));
         } else {
-            cq.orderBy(cb.asc(root.get("id")));
+            cqEvent.orderBy(cb.asc(rootEvent.get("id")));
         }
 
-        TypedQuery<Event> query = em.createQuery(cq);
+        TypedQuery<Event> query = em.createQuery(cqEvent);
 
         return query
                 .setMaxResults(publicGetEventsCriteria.getSize())
@@ -116,5 +165,13 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             LocalDateTime rangeStart = LocalDateTime.now();
             predicatesList.add(cb.greaterThan(root.get("eventDate"), rangeStart));
         }
+    }
+
+    private Long getConfirmedRequests(Long eventId) {
+        return em.createQuery("SELECT COUNT(p.id) " +
+                                "FROM ParticipationRequest p " +
+                                "WHERE p.event.id = " + eventId,
+                        Long.class)
+                .getSingleResult();
     }
 }

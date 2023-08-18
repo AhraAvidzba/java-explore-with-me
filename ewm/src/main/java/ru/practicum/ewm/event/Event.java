@@ -4,12 +4,16 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.ewm.category.Category;
 import ru.practicum.ewm.location.Location;
+import ru.practicum.ewm.request.ParticipationRequest;
 import ru.practicum.ewm.user.User;
 
 import javax.persistence.*;
+import javax.persistence.metamodel.StaticMetamodel;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -19,9 +23,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
+@StaticMetamodel(Event.class)
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     @Column
     @NotBlank
@@ -31,8 +38,9 @@ public class Event {
     @JoinColumn(name = "category_id")
     @NotNull
     private Category category;
-    @Column
-    private int confirmedRequests;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private List<ParticipationRequest> confirmedRequests;
     @Column
     private LocalDateTime createdOn;
     @Column
@@ -53,7 +61,7 @@ public class Event {
     @NotNull
     private Boolean paid;
     @Column
-    private int participantLimit;
+    private Integer participantLimit;
     @Column
     private LocalDateTime publishedOn;
     @Column

@@ -14,7 +14,7 @@ public class EventMapper {
                 .annotation(event.getAnnotation())
                 .views(event.getViews())
                 .category(CategoryMapper.mapToCategoryOutDto(event.getCategory()))
-                .confirmedRequests(event.getConfirmedRequests())
+                .confirmedRequests(event.getConfirmedRequests().size())
                 .paid(event.getPaid())
                 .initiator(UserMapper.toUserShortDto(event.getInitiator()))
                 .build();
@@ -28,7 +28,7 @@ public class EventMapper {
                 .annotation(event.getAnnotation())
                 .views(event.getViews())
                 .category(CategoryMapper.mapToCategoryOutDto(event.getCategory()))
-                .confirmedRequests(event.getConfirmedRequests())
+                .confirmedRequests(event.getConfirmedRequests().size())
                 .paid(event.getPaid())
                 .initiator(UserMapper.toUserShortDto(event.getInitiator()))
                 .createdOn(event.getCreatedOn())

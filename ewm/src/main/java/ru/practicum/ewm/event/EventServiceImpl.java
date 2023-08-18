@@ -26,6 +26,8 @@ import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,7 +73,7 @@ public class EventServiceImpl implements EventService {
                 .requestModeration(eventInDto.getRequestModeration())
                 .title(eventInDto.getTitle())
                 //дополнительные данные
-                .confirmedRequests(0)
+                .confirmedRequests(new ArrayList<>())
                 .createdOn(LocalDateTime.now())
                 .initiator(user)
                 .publishedOn(publishedOn)
@@ -140,7 +142,7 @@ public class EventServiceImpl implements EventService {
     public EventRequestStatusUpdateResult changeStatusForUserEventsRequests(EventRequestStatusUpdateRequest requestsAndStatus, Long eventId, Long userId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ContentNotFoundException("Событие не найдено"));
-        if (event.getParticipantLimit() != 0 && event.getParticipantLimit() == event.getConfirmedRequests()) {
+        if (event.getParticipantLimit() != 0 && event.getParticipantLimit() == event.getConfirmedRequests().size()) {
             throw new ContentAlreadyExistException("Лимит на количество участников в этом событии достигнут");
         }
         if (!userId.equals(event.getInitiator().getId())) {
@@ -155,9 +157,9 @@ public class EventServiceImpl implements EventService {
                 throw new ContentAlreadyExistException("Не все заявки на участие в событии имеют статус ожидания подтверждения");
             } else {
                 if (Status.CONFIRMED.equals(requestsAndStatus.getStatus())) {
-                    if (event.getParticipantLimit() == 0 || event.getParticipantLimit() > event.getConfirmedRequests()) {
+                    if (event.getParticipantLimit() == 0 || event.getParticipantLimit() > event.getConfirmedRequests().size()) {
                         request.setStatus(Status.CONFIRMED);
-                        request.getEvent().setConfirmedRequests(request.getEvent().getConfirmedRequests() + 1);
+                        request.getEvent().getConfirmedRequests().add(request);
                     } else {
                         request.setStatus(Status.REJECTED);
                     }
