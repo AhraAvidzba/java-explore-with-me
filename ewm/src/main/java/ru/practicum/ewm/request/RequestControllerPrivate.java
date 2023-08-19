@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Slf4j
@@ -25,17 +26,19 @@ public class RequestControllerPrivate {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public ParticipationRequestDto addRequest(@RequestParam Long eventId,
-                                              @PathVariable Long userId) {
+                                              @PathVariable Long userId,
+                                              HttpServletRequest request) {
         ParticipationRequestDto participationRequestDto = requestService.addRequest(eventId, userId);
-        log.info("Отправляется запрос на участие в событии");
+        log.info("Отправляется запрос на участие в событии. Эндпоинт {}", request.getRequestURI());
         return participationRequestDto;
     }
 
     @PatchMapping("/{requestId}/cancel")
     @ResponseStatus(code = HttpStatus.OK)
     public ParticipationRequestDto cancelRequest(@PathVariable Long userId,
-                                                 @PathVariable Long requestId) {
-        log.info("Обновляется запрос на участие в событии");
+                                                 @PathVariable Long requestId,
+                                                 HttpServletRequest request) {
+        log.info("Обновляется запрос на участие в событии. Эндпоинт {}", request.getRequestURI());
         return requestService.cancelRequest(userId, requestId);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.compilation.dto.CompilationDto;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -21,15 +22,17 @@ public class CompilationControllerPublic {
     @GetMapping
     public List<CompilationDto> getCompilations(@RequestParam(defaultValue = "false") boolean pinned,
                                                 @PositiveOrZero @RequestParam(defaultValue = "0") int from,
-                                                @Positive @RequestParam(defaultValue = "10") int size) {
+                                                @Positive @RequestParam(defaultValue = "10") int size,
+                                                HttpServletRequest request) {
         List<CompilationDto> compilationDto = compilationService.getCompilations(pinned, from, size);
-        log.info("Подборки возвращаются");
+        log.info("Подборки возвращаются. Эндпоинт {}", request.getRequestURI());
         return compilationDto;
     }
 
     @GetMapping("/{compId}")
-    public CompilationDto removeCompilation(@PathVariable Long compId) {
-        log.info("Подборка возвращается");
+    public CompilationDto removeCompilation(@PathVariable Long compId,
+                                            HttpServletRequest request) {
+        log.info("Подборка возвращается. Эндпоинт {}", request.getRequestURI());
         return compilationService.getCompilationById(compId);
     }
 

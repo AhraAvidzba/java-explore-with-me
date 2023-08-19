@@ -35,7 +35,7 @@ public class EventControllerPublic {
                 .timestamp(LocalDateTime.now())
                 .build();
         List<EventShortDto> eventShortsDto = eventService.getEvents(publicGetEventsCriteria, statisticInDto);
-        log.info("Возвращается список с краткой информацией о событии");
+        log.info("Возвращается список с краткой информацией о событии. Эндпоинт {}", request.getRequestURI());
         return eventShortsDto;
     }
 
@@ -49,7 +49,7 @@ public class EventControllerPublic {
                 .timestamp(LocalDateTime.now())
                 .build();
         EventOutDto eventOutDto = eventService.getFullEventById(eventId, statisticInDto);
-        log.info("Возвращается полная информация о событии");
+        log.info("Возвращается полная информация о событии. Эндпоинт {}", request.getRequestURI());
         return eventOutDto;
     }
 }

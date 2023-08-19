@@ -10,6 +10,8 @@ import ru.practicum.ewm.compilation.dto.CompilationInDto;
 import ru.practicum.ewm.validations.Create;
 import ru.practicum.ewm.validations.Update;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Slf4j
 @RestController
 @RequestMapping(path = "/admin/compilations")
@@ -20,24 +22,27 @@ public class CompilationControllerAdmin {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public CompilationDto addCompilation(@Validated(Create.class) @RequestBody CompilationInDto compilationInDto) {
+    public CompilationDto addCompilation(@Validated(Create.class) @RequestBody CompilationInDto compilationInDto,
+                                         HttpServletRequest request) {
         CompilationDto compilationDto = compilationService.addCompilation(compilationInDto);
-        log.info("Подборка добавлена");
+        log.info("Подборка добавлена. Эндпоинт {}", request.getRequestURI());
         return compilationDto;
     }
 
     @DeleteMapping("/{compId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void removeCompilation(@PathVariable Long compId) {
-        log.info("Подборка удаляется");
+    public void removeCompilation(@PathVariable Long compId,
+                                  HttpServletRequest request) {
+        log.info("Подборка удаляется. Эндпоинт {}", request.getRequestURI());
         compilationService.removeCompilation(compId);
     }
 
     @PatchMapping("/{compId}")
     @ResponseStatus(code = HttpStatus.OK)
     public CompilationDto editCompilation(@Validated(Update.class) @RequestBody CompilationInDto compilationInDto,
-                                          @PathVariable Long compId) {
-        log.info("Подборка обновляется");
+                                          @PathVariable Long compId,
+                                          HttpServletRequest request) {
+        log.info("Подборка обновляется. Эндпоинт {}", request.getRequestURI());
         return compilationService.editCompilation(compilationInDto, compId);
     }
 

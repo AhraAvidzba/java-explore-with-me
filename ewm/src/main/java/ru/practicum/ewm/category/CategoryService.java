@@ -1,7 +1,7 @@
 package ru.practicum.ewm.category;
 
-import ru.practicum.ewm.category.dto.CategoryRequestDto;
 import ru.practicum.ewm.category.dto.CategoryOutDto;
+import ru.practicum.ewm.category.dto.CategoryRequestDto;
 
 import java.util.List;
 

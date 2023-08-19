@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.category.dto.CategoryOutDto;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -19,16 +20,18 @@ public class CategoryControllerPublic {
     private final CategoryService categoryService;
 
     @GetMapping
-    public List<CategoryOutDto> getCategory(@PositiveOrZero @RequestParam(defaultValue = "0") int from,
-                                            @Positive @RequestParam(defaultValue = "10") int size) {
+    public List<CategoryOutDto> getCategories(@PositiveOrZero @RequestParam(defaultValue = "0") int from,
+                                              @Positive @RequestParam(defaultValue = "10") int size,
+                                              HttpServletRequest request) {
         List<CategoryOutDto> categoryOutDtoList = categoryService.getCategories(from, size);
-        log.info("Возвращаются категории");
+        log.info("Возвращаются категории. Эндпоинт {}", request.getRequestURI());
         return categoryOutDtoList;
     }
 
     @GetMapping("/{catId}")
-    public CategoryOutDto removeCategory(@PathVariable Long catId) {
-        log.info("Возвращается категория");
+    public CategoryOutDto removeCategory(@PathVariable Long catId,
+                                         HttpServletRequest request) {
+        log.info("Возвращается категория. Эндпоинт {}", request.getRequestURI());
         return categoryService.getCategoryById(catId);
     }
 
