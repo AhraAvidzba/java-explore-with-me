@@ -4,7 +4,6 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.ewm.category.Category;
 import ru.practicum.ewm.location.Location;
-import ru.practicum.ewm.request.ParticipationRequest;
 import ru.practicum.ewm.user.User;
 
 import javax.persistence.*;
@@ -12,8 +11,6 @@ import javax.persistence.metamodel.StaticMetamodel;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -38,9 +35,8 @@ public class Event {
     @JoinColumn(name = "category_id")
     @NotNull
     private Category category;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private List<ParticipationRequest> confirmedRequests;
+    @Column
+    private int confirmedRequests;
     @Column
     private LocalDateTime createdOn;
     @Column

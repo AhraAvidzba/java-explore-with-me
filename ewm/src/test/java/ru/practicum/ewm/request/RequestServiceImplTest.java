@@ -18,7 +18,6 @@ import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,7 +62,7 @@ class RequestServiceImplTest {
     void addRequest() {
         //given
         Event event = createEvent();
-        event.setConfirmedRequests(new ArrayList<>(List.of(createRequest())));
+        event.setConfirmedRequests(1);
         event.setParticipantLimit(11);
         event.setRequestModeration(true);
         event.setState(State.PUBLISHED);
@@ -78,7 +77,7 @@ class RequestServiceImplTest {
         ParticipationRequestDto participationRequestDto = requestService.addRequest(1L, 1L);
         //then
         verify(eventRepository, never()).save(any());
-        assertThat(event.getConfirmedRequests().size(), equalTo(1));
+        assertThat(event.getConfirmedRequests(), equalTo(1));
         assertThat(participationRequestDto.getEvent(), equalTo(1L));
         assertThat(participationRequestDto.getRequester(), equalTo(1L));
         assertThat(participationRequestDto.getStatus(), equalTo(Status.PENDING));
@@ -88,7 +87,7 @@ class RequestServiceImplTest {
     void addRequest_whenRequestConfirmed_thenChangeStatusAndIncreaseEventConfirmedRequests() {
         //given
         Event event = createEvent();
-        event.setConfirmedRequests(new ArrayList<>(List.of(createRequest())));
+        event.setConfirmedRequests(1);
         event.setParticipantLimit(11);
         event.setRequestModeration(false);
         event.setState(State.PUBLISHED);
@@ -105,7 +104,7 @@ class RequestServiceImplTest {
         verify(eventRepository, times(1)).save(any());
         verify(requestRepository, times(1)).save(requestArgumentCaptor.capture());
         ParticipationRequest participationRequest = requestArgumentCaptor.getValue();
-        assertThat(event.getConfirmedRequests().size(), equalTo(2));
+        assertThat(event.getConfirmedRequests(), equalTo(2));
         assertThat(participationRequest.getEvent().getId(), equalTo(1L));
         assertThat(participationRequest.getRequester().getId(), equalTo(1L));
         assertThat(participationRequest.getStatus(), equalTo(Status.CONFIRMED));
@@ -135,8 +134,8 @@ class RequestServiceImplTest {
         Event event = createEvent();
         event.setState(State.PUBLISHED);
         event.setRequestModeration(false);
-        event.setConfirmedRequests(new ArrayList<>(List.of(createRequest())));
-        event.setParticipantLimit(1);
+        event.setConfirmedRequests(11);
+        event.setParticipantLimit(11);
         event.getInitiator().setId(2L);
         //when
         when(userRepository.findById(anyLong()))
@@ -153,7 +152,7 @@ class RequestServiceImplTest {
     void addRequest_whenUserRepeatRequest_ThenExceptionThrown() {
         //given
         Event event = createEvent();
-        event.setConfirmedRequests(new ArrayList<>(List.of(createRequest())));
+        event.setConfirmedRequests(1);
         event.setParticipantLimit(11);
         event.setRequestModeration(false);
         event.setState(State.PUBLISHED);
@@ -175,7 +174,7 @@ class RequestServiceImplTest {
     void cancelRequest_whenRequestConfirmed_thenChangeStatusAndDecreaseEventConfirmedRequests() {
         //given
         Event event = createEvent();
-        event.setConfirmedRequests(new ArrayList<>(List.of(createRequest())));
+        event.setConfirmedRequests(1);
         event.setParticipantLimit(11);
         event.setRequestModeration(false);
         event.setState(State.PUBLISHED);
@@ -196,7 +195,7 @@ class RequestServiceImplTest {
         verify(eventRepository, times(1)).save(any());
         verify(requestRepository, times(1)).save(requestArgumentCaptor.capture());
         ParticipationRequest savedParticipationRequest = requestArgumentCaptor.getValue();
-        assertThat(savedParticipationRequest.getEvent().getConfirmedRequests().size(), equalTo(0));
+        assertThat(savedParticipationRequest.getEvent().getConfirmedRequests(), equalTo(0));
         assertThat(savedParticipationRequest.getEvent().getId(), equalTo(1L));
         assertThat(savedParticipationRequest.getRequester().getId(), equalTo(1L));
         assertThat(savedParticipationRequest.getStatus(), equalTo(Status.CANCELED));
@@ -206,7 +205,7 @@ class RequestServiceImplTest {
     void cancelRequest_whenRequestNotConfirmed_thenChangeStatusToCanceled() {
         //given
         Event event = createEvent();
-        event.setConfirmedRequests(new ArrayList<>(List.of(createRequest())));
+        event.setConfirmedRequests(1);
         event.setParticipantLimit(11);
         event.setRequestModeration(false);
         event.setState(State.PUBLISHED);
@@ -227,7 +226,7 @@ class RequestServiceImplTest {
         verify(eventRepository, never()).save(any());
         verify(requestRepository, times(1)).save(requestArgumentCaptor.capture());
         ParticipationRequest savedParticipationRequest = requestArgumentCaptor.getValue();
-        assertThat(savedParticipationRequest.getEvent().getConfirmedRequests().size(), equalTo(1));
+        assertThat(savedParticipationRequest.getEvent().getConfirmedRequests(), equalTo(1));
         assertThat(savedParticipationRequest.getEvent().getId(), equalTo(1L));
         assertThat(savedParticipationRequest.getRequester().getId(), equalTo(1L));
         assertThat(savedParticipationRequest.getStatus(), equalTo(Status.CANCELED));
