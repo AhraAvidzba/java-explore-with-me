@@ -5,5 +5,5 @@ public interface StatisticWithHitsProjection {
 
     String getUri();
 
-    Long getHits();
+    int getHits();
 }

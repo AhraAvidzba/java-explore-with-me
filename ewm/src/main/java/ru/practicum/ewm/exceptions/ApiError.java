@@ -1,19 +1,17 @@
-package ru.practicum.ewm.dtos;
+package ru.practicum.ewm.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class StatisticInDto {
-    private String app;
-    private String uri;
-    private String ip;
+public class ApiError {
+    private String message;
+    private String reason;
+    private String status;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 }

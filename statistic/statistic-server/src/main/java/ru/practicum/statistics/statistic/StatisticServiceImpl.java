@@ -2,9 +2,11 @@ package ru.practicum.statistics.statistic;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dtos.StatisticInDto;
 import ru.practicum.ewm.dtos.StatisticOutDto;
 import ru.practicum.ewm.dtos.StatisticWithHitsProjection;
+import ru.practicum.statistics.exceptions.NotValidDatesException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +23,11 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<StatisticWithHitsProjection> getStatistics(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
+        if (start.isAfter(end)) {
+            throw new NotValidDatesException("Дата начала не может быть позже даты конца");
+        }
         List<StatisticWithHitsProjection> statistics;
         if (unique) {
             if (uris.length == 0) {

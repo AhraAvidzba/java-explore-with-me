@@ -12,5 +12,5 @@ import lombok.Setter;
 public class StatisticWithHitsDto {
     private String app;
     private String uri;
-    private Long hits;
+    private int hits;
 }
