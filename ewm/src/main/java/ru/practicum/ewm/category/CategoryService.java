@@ -1,17 +1,17 @@
 package ru.practicum.ewm.category;
 
-import ru.practicum.ewm.category.dto.CategoryInDto;
+import ru.practicum.ewm.category.dto.CategoryRequestDto;
 import ru.practicum.ewm.category.dto.CategoryOutDto;
 
 import java.util.List;
 
 public interface CategoryService {
     //Методы для админов
-    CategoryOutDto addCategory(CategoryInDto categoryInDto);
+    CategoryOutDto addCategory(CategoryRequestDto categoryRequestDto);
 
     void removeCategory(Long id);
 
-    CategoryOutDto editCategory(CategoryInDto categoryInDto, Long catId);
+    CategoryOutDto editCategory(CategoryRequestDto categoryRequestDto, Long catId);
 
     //Публичные методы
     List<CategoryOutDto> getCategories(int from, int size);

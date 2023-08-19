@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.practicum.ewm.category.dto.CategoryInDto;
+import ru.practicum.ewm.category.dto.CategoryRequestDto;
 import ru.practicum.ewm.category.dto.CategoryOutDto;
 import ru.practicum.ewm.exceptions.ContentAlreadyExistException;
 import ru.practicum.ewm.exceptions.ContentNotFoundException;
@@ -32,14 +32,14 @@ class CategoryServiceITest {
     @Test
     void editCategory() {
         //given
-        List<CategoryInDto> sourceCategories = List.of(
+        List<CategoryRequestDto> sourceCategories = List.of(
                 makeCategoryInDto("Концерты"),
                 makeCategoryInDto("Кино"),
                 makeCategoryInDto("Еда")
         );
         sourceCategories.forEach(categoryService::addCategory);
         //when
-        CategoryInDto categoryOutDto = makeCategoryInDto("Спорт");
+        CategoryRequestDto categoryOutDto = makeCategoryInDto("Спорт");
         CategoryOutDto targetCategory = categoryService.editCategory(categoryOutDto, 1L);
         //then
         assertThat(targetCategory.getName(), equalTo("Спорт"));
@@ -49,7 +49,7 @@ class CategoryServiceITest {
     @Test
     void editCategory_whenUpdateSameName_thenContentAlreadyExistExceptionThrown() {
         //given
-        List<CategoryInDto> sourceCategories = List.of(
+        List<CategoryRequestDto> sourceCategories = List.of(
                 makeCategoryInDto("Концерты"),
                 makeCategoryInDto("Кино"),
                 makeCategoryInDto("Еда")
@@ -61,28 +61,28 @@ class CategoryServiceITest {
             savedCategories.add(categoryInDto);
         });
         Long savedId = savedCategories.get(0).getId();
-        CategoryInDto categoryInDto = makeCategoryInDto("Кино");
+        CategoryRequestDto categoryRequestDto = makeCategoryInDto("Кино");
         //when...then
         Assertions.assertThrows(
                 ContentAlreadyExistException.class,
-                () -> categoryService.editCategory(categoryInDto, savedId));
+                () -> categoryService.editCategory(categoryRequestDto, savedId));
     }
 
     @Test
     void editCategory_whenUpdateUncreatedId_thenContentNotFountExceptionThrown() {
         //given
-        CategoryInDto categoryInDto = makeCategoryInDto("Кино");
+        CategoryRequestDto categoryRequestDto = makeCategoryInDto("Кино");
         //when...then
         Assertions.assertThrows(
                 ContentNotFoundException.class,
-                () -> categoryService.editCategory(categoryInDto, 1L));
+                () -> categoryService.editCategory(categoryRequestDto, 1L));
     }
 
 
     @Test
     void getCategories() {
         //given
-        List<CategoryInDto> sourceCategories = List.of(
+        List<CategoryRequestDto> sourceCategories = List.of(
                 makeCategoryInDto("Концерты"),
                 makeCategoryInDto("Кино"),
                 makeCategoryInDto("Еда")
@@ -108,7 +108,7 @@ class CategoryServiceITest {
     @Test
     void removeCategory() {
         //given
-        CategoryInDto sourceCategory = makeCategoryInDto("Концерты");
+        CategoryRequestDto sourceCategory = makeCategoryInDto("Концерты");
 
         Long savedId = categoryService.addCategory(sourceCategory).getId();
         //when
@@ -121,7 +121,7 @@ class CategoryServiceITest {
     @Test
     void getCategoryById() {
         //given
-        CategoryInDto sourceCategory = makeCategoryInDto("Концерты");
+        CategoryRequestDto sourceCategory = makeCategoryInDto("Концерты");
 
         Long savedId = categoryService.addCategory(sourceCategory).getId();
 
@@ -132,8 +132,8 @@ class CategoryServiceITest {
     }
 
 
-    private CategoryInDto makeCategoryInDto(String name) {
-        return CategoryInDto.builder()
+    private CategoryRequestDto makeCategoryInDto(String name) {
+        return CategoryRequestDto.builder()
                 .name(name)
                 .build();
     }

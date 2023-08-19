@@ -5,7 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.category.dto.CategoryInDto;
+import ru.practicum.ewm.category.dto.CategoryRequestDto;
 import ru.practicum.ewm.category.dto.CategoryMapper;
 import ru.practicum.ewm.category.dto.CategoryOutDto;
 import ru.practicum.ewm.event.Event;
@@ -24,18 +24,18 @@ public class CategoryServiceImpl implements CategoryService {
     private final EventRepository eventRepository;
 
     @Override
-    public CategoryOutDto addCategory(CategoryInDto categoryInDto) {
-        Optional<Category> categoryName = categoryRepository.findCategoryByName(categoryInDto.getName());
+    public CategoryOutDto addCategory(CategoryRequestDto categoryRequestDto) {
+        Optional<Category> categoryName = categoryRepository.findCategoryByName(categoryRequestDto.getName());
         categoryName.ifPresent(x -> {
-            throw new ContentAlreadyExistException("Категортия с именем " + categoryInDto.getName() + " уже существует");
+            throw new ContentAlreadyExistException("Категортия с именем " + categoryRequestDto.getName() + " уже существует");
         });
-        Category category = CategoryMapper.mapToCategory(categoryInDto, null);
+        Category category = CategoryMapper.mapToCategory(categoryRequestDto, null);
         return CategoryMapper.mapToCategoryOutDto(categoryRepository.save(category));
     }
 
     @Override
     public void removeCategory(Long catId) {
-        Category category = categoryRepository.findById(catId)
+        categoryRepository.findById(catId)
                 .orElseThrow(() -> new ContentNotFoundException("Категории с id = " + catId + " не существует"));
         List<Event> events = eventRepository.findEventByCategoryId(catId);
         if (!events.isEmpty()) {
@@ -45,19 +45,19 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryOutDto editCategory(CategoryInDto categoryInDto, Long catId) {
+    public CategoryOutDto editCategory(CategoryRequestDto categoryRequestDto, Long catId) {
         if (catId == null) {
             throw new ContentNotFoundException("Необходимо указать id категории");
         }
         Category sameIdCategory = categoryRepository.findById(catId)
                 .orElseThrow(() -> new ContentNotFoundException("Категория не найдена"));
 
-        Optional<Category> sameNameCategory = categoryRepository.findCategoryByName(categoryInDto.getName());
+        Optional<Category> sameNameCategory = categoryRepository.findCategoryByName(categoryRequestDto.getName());
 
         if (sameNameCategory.isPresent() && !sameNameCategory.get().getId().equals(sameIdCategory.getId())) {
             throw new ContentAlreadyExistException("Категория с таким именем уже существует");
         }
-        Category savedCategory = categoryRepository.save(CategoryMapper.mapToCategory(categoryInDto, catId));
+        Category savedCategory = categoryRepository.save(CategoryMapper.mapToCategory(categoryRequestDto, catId));
         return CategoryMapper.mapToCategoryOutDto(savedCategory);
     }
 

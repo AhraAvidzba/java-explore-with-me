@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.category.dto.CategoryInDto;
+import ru.practicum.ewm.category.dto.CategoryRequestDto;
 import ru.practicum.ewm.category.dto.CategoryOutDto;
 
 @Slf4j
@@ -16,8 +16,8 @@ public class CategoryControllerAdmin {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public CategoryOutDto addCategory(@RequestBody CategoryInDto categoryInDto) {
-        CategoryOutDto categoryOutDto = categoryService.addCategory(categoryInDto);
+    public CategoryOutDto addCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
+        CategoryOutDto categoryOutDto = categoryService.addCategory(categoryRequestDto);
         log.info("Категория сохранена, id = {}", categoryOutDto.getId());
         return categoryOutDto;
     }
@@ -31,7 +31,7 @@ public class CategoryControllerAdmin {
     @PatchMapping("/{catId}")
     @ResponseStatus(code = HttpStatus.OK)
     public CategoryOutDto editCategory(@PathVariable Long catId,
-                                       @RequestBody CategoryInDto categoryInDto) {
-        return categoryService.editCategory(categoryInDto, catId);
+                                       @RequestBody CategoryRequestDto categoryRequestDto) {
+        return categoryService.editCategory(categoryRequestDto, catId);
     }
 }

@@ -10,10 +10,10 @@ public class CategoryMapper {
                 .build();
     }
 
-    public static Category mapToCategory(CategoryInDto categoryInDto, Long catId) {
+    public static Category mapToCategory(CategoryRequestDto categoryRequestDto, Long catId) {
         return Category.builder()
                 .id(catId)
-                .name(categoryInDto.getName())
+                .name(categoryRequestDto.getName())
                 .build();
     }
 
