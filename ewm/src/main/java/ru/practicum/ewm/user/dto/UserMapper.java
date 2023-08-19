@@ -3,6 +3,9 @@ package ru.practicum.ewm.user.dto;
 import lombok.experimental.UtilityClass;
 import ru.practicum.ewm.user.User;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 @UtilityClass
 public class UserMapper {
     public static UserDto toUserDto(User user) {
@@ -10,6 +13,9 @@ public class UserMapper {
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
+                .subscribers(user.getSubscribers().stream()
+                        .map(User::getId)
+                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -39,6 +45,7 @@ public class UserMapper {
         return User.builder()
                 .email(userInDto.getEmail())
                 .name(userInDto.getName())
+                .subscribers(new ArrayList<>())
                 .build();
     }
 }
