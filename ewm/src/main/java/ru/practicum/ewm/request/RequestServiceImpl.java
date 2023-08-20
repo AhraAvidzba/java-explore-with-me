@@ -35,7 +35,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public ParticipationRequestDto addRequest(Long eventId, Long userId) {
+    public ParticipationRequestDto addRequest(Long eventId, Long userId, Boolean showToSubscribers) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ContentNotFoundException("Пользователь не найден"));
         Event event = eventRepository.findById(eventId)
@@ -57,6 +57,7 @@ public class RequestServiceImpl implements RequestService {
                 .event(event)
                 .created(LocalDateTime.now())
                 .status(Status.PENDING)
+                .showToEventSubscribers(showToSubscribers)
                 .build();
         if (!event.isRequestModeration() || event.getParticipantLimit() == 0) {
             participationRequest.setStatus(Status.CONFIRMED);

@@ -37,5 +37,5 @@ public class ParticipationRequest {
     private Status status;
 
     @Column(name = "show_to_subscribers")
-    private Boolean showToSubscribers;
+    private Boolean showToEventSubscribers = true;
 }

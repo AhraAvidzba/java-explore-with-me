@@ -74,7 +74,7 @@ class RequestServiceImplTest {
                 .thenReturn(Optional.of(event));
         when(requestRepository.save(any()))
                 .thenReturn(createRequest());
-        ParticipationRequestDto participationRequestDto = requestService.addRequest(1L, 1L);
+        ParticipationRequestDto participationRequestDto = requestService.addRequest(1L, 1L, true);
         //then
         verify(eventRepository, never()).save(any());
         assertThat(event.getConfirmedRequests(), equalTo(1));
@@ -99,7 +99,7 @@ class RequestServiceImplTest {
                 .thenReturn(Optional.of(event));
         when(requestRepository.save(any()))
                 .thenReturn(createRequest());
-        requestService.addRequest(1L, 1L);
+        requestService.addRequest(1L, 1L, true);
         //then
         verify(eventRepository, times(1)).save(any());
         verify(requestRepository, times(1)).save(requestArgumentCaptor.capture());
@@ -125,7 +125,7 @@ class RequestServiceImplTest {
         verify(requestRepository, never()).save(any());
         Assertions.assertThrows(
                 ContentAlreadyExistException.class,
-                () -> requestService.addRequest(1L, 1L));
+                () -> requestService.addRequest(1L, 1L, true));
     }
 
     @Test
@@ -145,7 +145,7 @@ class RequestServiceImplTest {
         //then
         Assertions.assertThrows(
                 ContentAlreadyExistException.class,
-                () -> requestService.addRequest(1L, 1L));
+                () -> requestService.addRequest(1L, 1L, true));
     }
 
     @Test
@@ -167,7 +167,7 @@ class RequestServiceImplTest {
         //then
         Assertions.assertThrows(
                 ContentAlreadyExistException.class,
-                () -> requestService.addRequest(1L, 1L));
+                () -> requestService.addRequest(1L, 1L, true));
     }
 
     @Test

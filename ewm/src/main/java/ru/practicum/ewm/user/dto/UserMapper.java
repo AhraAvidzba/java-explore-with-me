@@ -13,9 +13,6 @@ public class UserMapper {
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
-                .subscribers(user.getSubscribers().stream()
-                        .map(User::getId)
-                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -45,7 +42,6 @@ public class UserMapper {
         return User.builder()
                 .email(userInDto.getEmail())
                 .name(userInDto.getName())
-                .subscribers(new ArrayList<>())
                 .build();
     }
 }

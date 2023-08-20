@@ -16,4 +16,5 @@ public class ParticipationRequestDto {
     private Long event;
     private Long requester;
     private Status status;
+    private Boolean showToEventSubscribers;
 }

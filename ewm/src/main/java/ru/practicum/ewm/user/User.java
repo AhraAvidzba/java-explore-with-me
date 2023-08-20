@@ -3,6 +3,7 @@ package ru.practicum.ewm.user;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import ru.practicum.ewm.user.usersRelation.UsersRelation;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -19,7 +20,7 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = "subscribers")
+@EqualsAndHashCode(exclude = {"subscribers", "friends"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +38,9 @@ public class User {
     @Length(min = 6, max = 254)
     private String email;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "users_subscribers", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"), inverseJoinColumns = @JoinColumn(name = "subscriber_id", referencedColumnName = "user_id"))
-    @JsonIgnoreProperties("subscribers")
-    private List<User> subscribers = new ArrayList<>();
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "users_subscribers", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"), inverseJoinColumns = @JoinColumn(name = "subscriber_id", referencedColumnName = "user_id"))
+//    @JsonIgnoreProperties("subscribers")
+//    private List<User> subscribers = new ArrayList<>();
+
 }

@@ -12,6 +12,7 @@ public class RequestMapper {
                 .created(participationRequest.getCreated())
                 .status(participationRequest.getStatus())
                 .id(participationRequest.getId())
+                .showToEventSubscribers(participationRequest.getShowToEventSubscribers())
                 .build();
     }
 

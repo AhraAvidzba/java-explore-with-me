@@ -8,7 +8,7 @@ public interface RequestService {
     //Приватные методы
     List<ParticipationRequestDto> getRequests(Long userId);
 
-    ParticipationRequestDto addRequest(Long eventId, Long userId);
+    ParticipationRequestDto addRequest(Long eventId, Long userId, Boolean showToSubscribers);
 
     ParticipationRequestDto cancelRequest(Long userId, Long requestId);
 }
