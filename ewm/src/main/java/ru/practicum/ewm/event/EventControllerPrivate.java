@@ -79,4 +79,26 @@ public class EventControllerPrivate {
         log.info("Статус запросов на участие в событии изменен. Эндпоинт {}", request.getRequestURI());
         return eventRequestStatusUpdateResult;
     }
+
+    @GetMapping("/{friendId}/visits")
+    public List<EventOutDto> getFriendsEventVisits(@PositiveOrZero @RequestParam(defaultValue = "0") int from,
+                                                   @Positive @RequestParam(defaultValue = "10") int size,
+                                                   @PathVariable Long userId,
+                                                   @PathVariable Long friendId,
+                                                   HttpServletRequest request) {
+        List<EventOutDto> eventShortsDto = eventService.getFriendsEventVisits(userId, friendId);
+        log.info("Возвращается список с событиями, которые посещает пользователь. Эндпоинт {}", request.getRequestURI());
+        return eventShortsDto;
+    }
+
+    @GetMapping("/{friendId}/published")
+    public List<EventOutDto> getFriendsEventPublishes(@PositiveOrZero @RequestParam(defaultValue = "0") int from,
+                                                      @Positive @RequestParam(defaultValue = "10") int size,
+                                                      @PathVariable Long userId,
+                                                      @PathVariable Long friendId,
+                                                      HttpServletRequest request) {
+        List<EventOutDto> eventShortsDto = eventService.getFriendsEventPublishes(userId, friendId);
+        log.info("Возвращается список с событиями, которые опубликовал пользователь. Эндпоинт {}", request.getRequestURI());
+        return eventShortsDto;
+    }
 }

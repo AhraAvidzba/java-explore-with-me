@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class UserWithFriendsDto {
+public class UserWithFriendsAndSubscribersDto {
     private Long id;
     private String name;
     private String email;

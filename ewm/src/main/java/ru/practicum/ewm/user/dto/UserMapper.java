@@ -3,9 +3,6 @@ package ru.practicum.ewm.user.dto;
 import lombok.experimental.UtilityClass;
 import ru.practicum.ewm.user.User;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
 @UtilityClass
 public class UserMapper {
     public static UserDto toUserDto(User user) {

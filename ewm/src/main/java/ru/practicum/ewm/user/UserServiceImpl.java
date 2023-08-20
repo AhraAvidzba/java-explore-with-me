@@ -10,8 +10,7 @@ import ru.practicum.ewm.exceptions.ContentNotFoundException;
 import ru.practicum.ewm.user.dto.UserDto;
 import ru.practicum.ewm.user.dto.UserInDto;
 import ru.practicum.ewm.user.dto.UserMapper;
-import ru.practicum.ewm.user.dto.UserWithFriendsDto;
-import ru.practicum.ewm.user.usersRelation.UsesRelationRepository;
+import ru.practicum.ewm.user.dto.UserWithFriendsAndSubscribersDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +20,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UsesRelationRepository usesRelationRepository;
+
+    //    private final UsesRelationRepository usesRelationRepository;
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> getUsers(List<Long> ids, int from, int size) {
@@ -56,17 +56,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserWithFriendsDto sendFriendshipRequest(Long userId, Long friendId) {
+    public UserWithFriendsAndSubscribersDto sendFriendshipRequest(Long userId, Long friendId) {
         return null;
     }
 
     @Override
-    public UserWithFriendsDto subscribeToFriendsEventVisits(Long userId, Long friendId) {
+    public UserWithFriendsAndSubscribersDto subscribeToFriendsEventVisits(Long userId, Long friendId) {
         return null;
     }
 
     @Override
-    public UserWithFriendsDto subscribeToFriendsEventPublishes(Long userId, Long friendId) {
+    public UserWithFriendsAndSubscribersDto subscribeToFriendsEventPublishes(Long userId, Long friendId) {
         return null;
     }
 }

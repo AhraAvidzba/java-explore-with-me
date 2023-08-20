@@ -184,6 +184,16 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public List<EventOutDto> getFriendsEventVisits(Long userId, Long friendId) {
+        return null;
+    }
+
+    @Override
+    public List<EventOutDto> getFriendsEventPublishes(Long userId, Long friendId) {
+        return null;
+    }
+
+    @Override
     public List<EventShortDto> getEvents(PublicGetEventsCriteria publicGetEventsCriteria, StatisticInDto statisticInDto) {
         if (publicGetEventsCriteria.getCategories() != null) {
             List<Category> categories = categoryRepository.findByIdIn(publicGetEventsCriteria.getCategories());

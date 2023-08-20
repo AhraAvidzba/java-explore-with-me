@@ -3,7 +3,7 @@ package ru.practicum.ewm.user;
 
 import ru.practicum.ewm.user.dto.UserDto;
 import ru.practicum.ewm.user.dto.UserInDto;
-import ru.practicum.ewm.user.dto.UserWithFriendsDto;
+import ru.practicum.ewm.user.dto.UserWithFriendsAndSubscribersDto;
 
 import java.util.List;
 
@@ -16,8 +16,10 @@ public interface UserService {
     void deleteUser(Long id);
 
     //Приватные методы
-    UserWithFriendsDto sendFriendshipRequest(Long userId, Long friendId);
-    UserWithFriendsDto subscribeToFriendsEventVisits(Long userId, Long friendId);
-    UserWithFriendsDto subscribeToFriendsEventPublishes(Long userId, Long friendId);
+    UserWithFriendsAndSubscribersDto sendFriendshipRequest(Long userId, Long friendId);
+
+    UserWithFriendsAndSubscribersDto subscribeToFriendsEventVisits(Long userId, Long friendId);
+
+    UserWithFriendsAndSubscribersDto subscribeToFriendsEventPublishes(Long userId, Long friendId);
 
 }
