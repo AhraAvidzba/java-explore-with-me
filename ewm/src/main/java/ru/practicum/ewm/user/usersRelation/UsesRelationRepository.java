@@ -1,4 +1,8 @@
 package ru.practicum.ewm.user.usersRelation;
 
-//public interface UsesRelationRepository extends JpaRepository<UsesRelationRepository, Long> {
-//}
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UsesRelationRepository extends JpaRepository<UsersRelation, UsersRelationId> {
+}

@@ -11,6 +11,9 @@ import ru.practicum.ewm.user.dto.UserDto;
 import ru.practicum.ewm.user.dto.UserInDto;
 import ru.practicum.ewm.user.dto.UserMapper;
 import ru.practicum.ewm.user.dto.UserWithFriendsAndSubscribersDto;
+import ru.practicum.ewm.user.usersRelation.UsersRelation;
+import ru.practicum.ewm.user.usersRelation.UsersRelationId;
+import ru.practicum.ewm.user.usersRelation.UsesRelationRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +23,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final UsesRelationRepository usesRelationRepository;
 
-    //    private final UsesRelationRepository usesRelationRepository;
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> getUsers(List<Long> ids, int from, int size) {
@@ -62,6 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserWithFriendsAndSubscribersDto subscribeToFriendsEventVisits(Long userId, Long friendId) {
+        usesRelationRepository.findById(UsersRelationId.builder().user(1L).friend(2L).build());
         return null;
     }
 

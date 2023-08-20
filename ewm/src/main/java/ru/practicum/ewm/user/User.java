@@ -16,7 +16,6 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"subscribers", "friends"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,10 +32,4 @@ public class User {
     @Email
     @Length(min = 6, max = 254)
     private String email;
-
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "users_subscribers", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"), inverseJoinColumns = @JoinColumn(name = "subscriber_id", referencedColumnName = "user_id"))
-//    @JsonIgnoreProperties("subscribers")
-//    private List<User> subscribers = new ArrayList<>();
-
 }
