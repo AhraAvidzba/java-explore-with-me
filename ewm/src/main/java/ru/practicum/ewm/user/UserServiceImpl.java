@@ -166,22 +166,6 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    private boolean areUsersFriends(List<UsersRelation> userRelations, Long userId, Long friendId) {
-        UsersRelationId usersRelationId = UsersRelationId.builder()
-                .userId(userId)
-                .friendId(friendId)
-                .build();
-        UsersRelationId revertedUsersRelationId = UsersRelationId.builder()
-                .userId(friendId)
-                .friendId(userId)
-                .build();
-        return userRelations.stream()
-                .anyMatch(x -> (x.getUsersRelationId().equals(usersRelationId)
-                        || x.getUsersRelationId().equals(revertedUsersRelationId))
-                        && (x.getUsersRelationId().equals(revertedUsersRelationId)
-                        || x.getUsersRelationId().equals(usersRelationId)));
-    }
-
     private boolean areUsersFriends(Long userId, Long friendId) {
         List<UsersRelation> userRelation = usersRelationRepository.findByUsersRelationIdIn(List.of(
                 UsersRelationId.builder()
