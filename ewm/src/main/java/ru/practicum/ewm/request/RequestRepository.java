@@ -16,5 +16,5 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
 
     Optional<ParticipationRequest> findRequestByRequesterIdAndEventId(Long userId, Long eventId);
 
-    List<ParticipationRequest>  findByRequesterIdAndEventStateAndEventEventDateIsAfterAndShowToEventSubscribers(Long requesterId, State state, LocalDateTime date, Boolean isShowToSubscribers);
+    List<ParticipationRequest> findByRequesterIdAndEventStateAndEventEventDateIsAfterAndShowToEventSubscribers(Long requesterId, State state, LocalDateTime date, Boolean isShowToSubscribers);
 }
