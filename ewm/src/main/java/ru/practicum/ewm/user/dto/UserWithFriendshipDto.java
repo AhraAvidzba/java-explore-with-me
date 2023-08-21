@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.ewm.user.User;
+import ru.practicum.ewm.user.usersRelation.dto.UsersRelationDto;
 
 import java.util.List;
 
@@ -12,11 +12,9 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class UserWithFriendsAndSubscribersDto {
+public class UserWithFriendshipDto {
     private Long id;
     private String name;
     private String email;
-    private List<User> friends;
-    private List<User> friendsEventVisitSubscribers;
-    private List<User> friendsEventPublishSubscribers;
+    List<UsersRelationDto> friendship;
 }

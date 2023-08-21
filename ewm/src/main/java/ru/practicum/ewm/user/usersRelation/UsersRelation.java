@@ -13,18 +13,22 @@ import javax.persistence.*;
 @ToString
 @Getter
 @Setter
-@IdClass(UsersRelationId.class)
+@EqualsAndHashCode
 public class UsersRelation {
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "friend_id")
-    private User friend;
+    @EmbeddedId
+    private UsersRelationId usersRelationId;
     @Column
     private Boolean eventVisitSubscriber;
     @Column
     private Boolean eventPublishSubscriber;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @MapsId("userId")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "friend_id")
+    @MapsId("friendId")
+    private User friend;
 }

@@ -3,6 +3,8 @@ package ru.practicum.ewm.user.dto;
 import lombok.experimental.UtilityClass;
 import ru.practicum.ewm.user.User;
 
+import java.util.List;
+
 @UtilityClass
 public class UserMapper {
     public static UserDto toUserDto(User user) {
@@ -39,6 +41,14 @@ public class UserMapper {
         return User.builder()
                 .email(userInDto.getEmail())
                 .name(userInDto.getName())
+                .build();
+    }
+
+    public static UserWithFriendshipDto toUserWithFriendsAndSubscribersDto(User user,
+                                                                           List<UserShortDto> friends,
+                                                                           List<UserShortDto> friendsEventVisitSubscribers,
+                                                                           List<UserShortDto> friendsEventPublishSubscribers) {
+        return UserWithFriendshipDto.builder()
                 .build();
     }
 }
