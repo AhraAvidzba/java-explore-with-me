@@ -24,6 +24,9 @@ import ru.practicum.ewm.request.dto.RequestMapper;
 import ru.practicum.ewm.statistic.StatisticClient;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
+import ru.practicum.ewm.user.usersRelation.UsersRelation;
+import ru.practicum.ewm.user.usersRelation.UsersRelationId;
+import ru.practicum.ewm.user.usersRelation.UsesRelationRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,6 +42,7 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
     private final StatisticClient statisticClient;
+    private final UsesRelationRepository usersRelationRepository;
 
 
     @Override
@@ -185,12 +189,25 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventOutDto> getFriendsEventVisits(Long userId, Long friendId) {
-        return null;
+        if (!areUsersFriends(userId, friendId)) {
+            throw new UnavailableOperationException("Просматривать предстояшие посещения событий могут только друзья");
+        }
+        List<ParticipationRequest> participationRequests =
+                requestRepository.findByRequesterIdAndEventStateAndEventEventDateIsAfterAndShowToEventSubscribers(friendId,
+                        State.PUBLISHED,
+                        LocalDateTime.now(),
+                        true);
+        List<Event> events = participationRequests.stream().map(ParticipationRequest::getEvent).collect(Collectors.toList());
+        return events.stream().map(EventMapper::mapToEventOutDto).collect(Collectors.toList());
     }
 
     @Override
     public List<EventOutDto> getFriendsEventPublishes(Long userId, Long friendId) {
-        return null;
+        if (!areUsersFriends(userId, friendId)) {
+            throw new UnavailableOperationException("Просматривать публикуемые события можно только у друзей");
+        }
+        List<Event> events = eventRepository.findByInitiatorIdAndStateAndEventDateIsAfter(friendId, State.PUBLISHED, LocalDateTime.now());
+        return events.stream().map(EventMapper::mapToEventOutDto).collect(Collectors.toList());
     }
 
     @Override
@@ -305,6 +322,19 @@ public class EventServiceImpl implements EventService {
         if (eventTime.isBefore(LocalDateTime.now()) || eventTime.isBefore(comparedTime.plusHours(hoursReserve))) {
             throw new UnavailableOperationException("Поле eventDate должно содержать дату, которая еще не наступила и не может быть раньше, чем через " + hoursReserve + " час/a от текущего момента.");
         }
+    }
+
+    private boolean areUsersFriends(Long userId, Long friendId) {
+        List<UsersRelation> userRelation = usersRelationRepository.findByUsersRelationIdIn(List.of(
+                UsersRelationId.builder()
+                        .userId(userId)
+                        .friendId(friendId)
+                        .build(),
+                UsersRelationId.builder()
+                        .userId(friendId)
+                        .friendId(userId)
+                        .build()));
+        return userRelation.size() == 2;
     }
 
 }
