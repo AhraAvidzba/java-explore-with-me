@@ -68,30 +68,13 @@ public class UserServiceImpl implements UserService {
         if (users.size() != 2) {
             throw new ContentNotFoundException("Указанные id пользователей не соответствуют данным в базе");
         }
-
-        UsersRelationId usersRelationId = UsersRelationId.builder()
-                .userId(userId)
-                .friendId(friendId)
-                .build();
-
-        usersRelationRepository.findById(UsersRelationId.builder()
-                        .userId(userId)
-                        .friendId(friendId)
-                        .build())
+        User user = userId.equals(users.get(0).getId()) ? users.get(0) : users.get(1);
+        User friend = friendId.equals(users.get(0).getId()) ? users.get(0) : users.get(1);
+        UsersRelation usersRelation = createNewUsersRelation(user, friend);
+        usersRelationRepository.findById(usersRelation.getUsersRelationId())
                 .ifPresent((x) -> {
                     throw new ContentAlreadyExistException("Запрос дружбы уже был отправлен ранее");
                 });
-
-        User user = userId.equals(users.get(0).getId()) ? users.get(0) : users.get(1);
-        User friend = friendId.equals(users.get(0).getId()) ? users.get(0) : users.get(1);
-
-        UsersRelation usersRelation = UsersRelation.builder()
-                .usersRelationId(usersRelationId)
-                .user(user)
-                .friend(friend)
-                .eventPublishSubscriber(false)
-                .eventVisitSubscriber(false)
-                .build();
         usersRelationRepository.save(usersRelation);
 
         return getUserWithFriendshipDto(userId);
@@ -134,7 +117,6 @@ public class UserServiceImpl implements UserService {
         List<UsersRelation> confirmedFriends = new ArrayList<>();
         List<UsersRelation> requestSentFriends = new ArrayList<>();
         List<UsersRelation> requestReceivedFriends = new ArrayList<>();
-
         Set<Long> processedFriendships = new HashSet<>();
         List<UsersRelation> userRelations = usersRelationRepository.findByUsersRelationIdUserIdOrFriendId(userId, userId);
         for (UsersRelation userRelation : userRelations) {
@@ -151,19 +133,8 @@ public class UserServiceImpl implements UserService {
                 }
             }
         }
-
-        List<UsersRelationDto> usersRelationsDto = new ArrayList<>();
-        Stream.of(UsersRelationMapper.toUsersRelationDtoList(confirmedFriends, FriendStatus.CONFIRMED, userId),
-                        UsersRelationMapper.toUsersRelationDtoList(requestSentFriends, FriendStatus.REQUEST_SENT, userId),
-                        UsersRelationMapper.toUsersRelationDtoList(requestReceivedFriends, FriendStatus.REQUEST_RECEIVED, userId))
-                .forEach(usersRelationsDto::addAll);
-
-        return UserWithFriendshipDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .friendship(usersRelationsDto)
-                .build();
+        List<UsersRelationDto> usersRelationsDto = makeUsersRelationsDtoList(userId, confirmedFriends, requestSentFriends, requestReceivedFriends);
+        return createNewUserWithFriendshipDto(user, usersRelationsDto);
     }
 
     private boolean areUsersFriends(Long userId, Long friendId) {
@@ -177,5 +148,38 @@ public class UserServiceImpl implements UserService {
                         .friendId(userId)
                         .build()));
         return userRelation.size() == 2;
+    }
+
+    private UsersRelation createNewUsersRelation(User user, User friend) {
+        UsersRelationId usersRelationId = UsersRelationId.builder()
+                .userId(user.getId())
+                .friendId(friend.getId())
+                .build();
+
+        return UsersRelation.builder()
+                .usersRelationId(usersRelationId)
+                .user(user)
+                .friend(friend)
+                .eventPublishSubscriber(false)
+                .eventVisitSubscriber(false)
+                .build();
+    }
+
+    private UserWithFriendshipDto createNewUserWithFriendshipDto(User user, List<UsersRelationDto> usersRelationsDto) {
+        return UserWithFriendshipDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .friendship(usersRelationsDto)
+                .build();
+    }
+
+    private List<UsersRelationDto> makeUsersRelationsDtoList(Long userId, List<UsersRelation> confirmedFriends, List<UsersRelation> requestSentFriends, List<UsersRelation> requestReceivedFriends) {
+        List<UsersRelationDto> usersRelationsDto = new ArrayList<>();
+        Stream.of(UsersRelationMapper.toUsersRelationDtoList(confirmedFriends, FriendStatus.CONFIRMED, userId),
+                        UsersRelationMapper.toUsersRelationDtoList(requestSentFriends, FriendStatus.REQUEST_SENT, userId),
+                        UsersRelationMapper.toUsersRelationDtoList(requestReceivedFriends, FriendStatus.REQUEST_RECEIVED, userId))
+                .forEach(usersRelationsDto::addAll);
+        return usersRelationsDto;
     }
 }
