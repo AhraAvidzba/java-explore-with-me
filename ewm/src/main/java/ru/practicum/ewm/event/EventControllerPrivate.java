@@ -87,7 +87,7 @@ public class EventControllerPrivate {
                                                    @PathVariable Long friendId,
                                                    HttpServletRequest request) {
         log.info("Возвращается список с событиями, которые посещает пользователь. Эндпоинт {}", request.getRequestURI());
-        return eventService.getFriendsEventVisits(userId, friendId);
+        return eventService.getFriendsEventVisits(userId, friendId, from, size);
     }
 
     @GetMapping("/{friendId}/published")
@@ -96,7 +96,7 @@ public class EventControllerPrivate {
                                                       @PathVariable Long userId,
                                                       @PathVariable Long friendId,
                                                       HttpServletRequest request) {
-        List<EventOutDto> eventShortsDto = eventService.getFriendsEventPublishes(userId, friendId);
+        List<EventOutDto> eventShortsDto = eventService.getFriendsEventPublishes(userId, friendId, from, size);
         log.info("Возвращается список с событиями, которые опубликовал пользователь. Эндпоинт {}", request.getRequestURI());
         return eventShortsDto;
     }

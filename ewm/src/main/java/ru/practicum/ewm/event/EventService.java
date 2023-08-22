@@ -20,9 +20,9 @@ public interface EventService {
 
     EventRequestStatusUpdateResult changeStatusForUserEventsRequests(EventRequestStatusUpdateRequest requestsAndStatus, Long eventId, Long userId);
 
-    List<EventOutDto> getFriendsEventVisits(Long userId, Long friendId);
+    List<EventOutDto> getFriendsEventVisits(Long userId, Long friendId, int from, int size);
 
-    List<EventOutDto> getFriendsEventPublishes(Long userId, Long friendId);
+    List<EventOutDto> getFriendsEventPublishes(Long userId, Long friendId, int from, int size);
 
 
     //Публичные методы

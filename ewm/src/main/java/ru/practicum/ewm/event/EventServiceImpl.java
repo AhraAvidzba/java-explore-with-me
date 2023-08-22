@@ -188,25 +188,28 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventOutDto> getFriendsEventVisits(Long userId, Long friendId) {
+    public List<EventOutDto> getFriendsEventVisits(Long userId, Long friendId, int from, int size) {
         if (!areUsersFriends(userId, friendId)) {
             throw new UnavailableOperationException("Просматривать предстояшие посещения событий могут только друзья");
         }
+        PageRequest pageable = PageRequest.of(from, size, Sort.by("id").ascending());
         List<ParticipationRequest> participationRequests =
                 requestRepository.findByRequesterIdAndEventStateAndEventEventDateIsAfterAndShowToEventSubscribers(friendId,
                         State.PUBLISHED,
                         LocalDateTime.now(),
-                        true);
+                        true,
+                        pageable);
         List<Event> events = participationRequests.stream().map(ParticipationRequest::getEvent).collect(Collectors.toList());
         return events.stream().map(EventMapper::mapToEventOutDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<EventOutDto> getFriendsEventPublishes(Long userId, Long friendId) {
+    public List<EventOutDto> getFriendsEventPublishes(Long userId, Long friendId, int from, int size) {
         if (!areUsersFriends(userId, friendId)) {
             throw new UnavailableOperationException("Просматривать публикуемые события можно только у друзей");
         }
-        List<Event> events = eventRepository.findByInitiatorIdAndStateAndEventDateIsAfter(friendId, State.PUBLISHED, LocalDateTime.now());
+        PageRequest pageable = PageRequest.of(from, size, Sort.by("id").ascending());
+        List<Event> events = eventRepository.findByInitiatorIdAndStateAndEventDateIsAfter(friendId, State.PUBLISHED, LocalDateTime.now(), pageable);
         return events.stream().map(EventMapper::mapToEventOutDto).collect(Collectors.toList());
     }
 
