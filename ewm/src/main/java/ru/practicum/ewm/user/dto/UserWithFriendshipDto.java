@@ -16,5 +16,5 @@ public class UserWithFriendshipDto {
     private Long id;
     private String name;
     private String email;
-    List<UsersRelationDto> friendship;
+    private List<UsersRelationDto> friendship;
 }

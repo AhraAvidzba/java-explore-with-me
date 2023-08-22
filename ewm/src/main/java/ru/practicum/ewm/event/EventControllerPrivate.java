@@ -86,9 +86,8 @@ public class EventControllerPrivate {
                                                    @PathVariable Long userId,
                                                    @PathVariable Long friendId,
                                                    HttpServletRequest request) {
-        List<EventOutDto> eventShortsDto = eventService.getFriendsEventVisits(userId, friendId);
         log.info("Возвращается список с событиями, которые посещает пользователь. Эндпоинт {}", request.getRequestURI());
-        return eventShortsDto;
+        return eventService.getFriendsEventVisits(userId, friendId);
     }
 
     @GetMapping("/{friendId}/published")

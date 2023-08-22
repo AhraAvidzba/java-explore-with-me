@@ -10,6 +10,6 @@ public interface UsesRelationRepository extends JpaRepository<UsersRelation, Use
     //    List<UsersRelation> findByUserIdInAndFriendIdIn(List<Long> userId, List<Long> friendId);
     List<UsersRelation> findByUsersRelationIdIn(List<UsersRelationId> usersRelationIds);
 
-    List<UsersRelation> findByUsersRelationId_UserId_OrFriendId(Long userId, Long friendId);
+    List<UsersRelation> findByUsersRelationIdUserIdOrFriendId(Long userId, Long friendId);
 
 }

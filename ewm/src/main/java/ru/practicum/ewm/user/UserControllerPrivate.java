@@ -27,7 +27,7 @@ public class UserControllerPrivate {
         return savedUserDto;
     }
 
-    @PostMapping("/eventVisitSubscribe/{friendId}")
+    @PostMapping("/subscribe/event/visits/{friendId}")
     @ResponseStatus(code = HttpStatus.CREATED)
     public UserWithFriendshipDto subscribeToFriendsEventVisits(@PathVariable Long userId,
                                                                @PathVariable Long friendId,
@@ -37,7 +37,7 @@ public class UserControllerPrivate {
         return savedUserDto;
     }
 
-    @PostMapping("/eventPublishSubscribe/{friendId}")
+    @PostMapping("/subscribe/event/published/{friendId}")
     @ResponseStatus(code = HttpStatus.CREATED)
     public UserWithFriendshipDto subscribeToFriendsEventPublishes(@PathVariable Long userId,
                                                                   @PathVariable Long friendId,

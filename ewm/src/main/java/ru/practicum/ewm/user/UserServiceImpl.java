@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
         List<UsersRelation> requestReceivedFriends = new ArrayList<>();
 
         Set<Long> processedFriendships = new HashSet<>();
-        List<UsersRelation> userRelations = usersRelationRepository.findByUsersRelationId_UserId_OrFriendId(userId, userId);
+        List<UsersRelation> userRelations = usersRelationRepository.findByUsersRelationIdUserIdOrFriendId(userId, userId);
         for (UsersRelation userRelation : userRelations) {
             if (!processedFriendships.contains(userRelation.getUsersRelationId().userId + userRelation.getUsersRelationId().friendId)) {
                 if (areUsersFriends(userRelation.getUser().getId(), userRelation.getFriend().getId())) {
