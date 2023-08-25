@@ -35,4 +35,7 @@ public class ParticipationRequest {
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Column(name = "show_to_subscribers")
+    private Boolean showToEventSubscribers = true;
 }

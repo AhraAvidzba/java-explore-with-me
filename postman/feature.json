@@ -1,0 +1,840 @@
+{
+	"info": {
+		"_postman_id": "3cdfc3cf-c64f-4b2b-ab4e-847a9b0259d0",
+		"name": "Diploma_akhra",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26331050",
+		"_collection_link": "https://blue-trinity-688756.postman.co/workspace/Team-Workspace~a0455fa8-3cbe-4c30-89bf-15f150cd1112/collection/26331050-3cdfc3cf-c64f-4b2b-ab4e-847a9b0259d0?action=share&source=collection_link&creator=26331050"
+	},
+	"item": [
+		{
+			"name": "feature_tests",
+			"item": [
+				{
+					"name": "Добавить юзера 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(201); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Test user 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Test user 'email' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('email');",
+									"    pm.expect(jsonData.email, '\"email\" must be \"friend@mail.ru\"').to.eql('friend@mail.ru');",
+									"});",
+									"pm.test(\"Test user 'name' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData.name, '\"name\" must be \"Иван Петров\"').to.eql('Иван Петров');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"friend@mail.ru\",\n  \"name\": \"Иван Петров\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/admin/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Добавить юзера 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(201); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Test user 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Test user 'email' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('email');",
+									"    pm.expect(jsonData.email, '\"email\" must be \"friend@mail2.ru\"').to.eql('friend@mail2.ru');",
+									"});",
+									"pm.test(\"Test user 'name' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData.name, '\"name\" must be \"Иван Петров\"').to.eql('Иван Петров');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"friend@mail2.ru\",\n  \"name\": \"Иван Петров\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/admin/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Добавить юзера 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(201); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Test user 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Test user 'email' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('email');",
+									"    pm.expect(jsonData.email, '\"email\" must be \"friend@mail3.ru\"').to.eql('friend@mail3.ru');",
+									"});",
+									"pm.test(\"Test user 'name' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData.name, '\"name\" must be \"Иван Петров\"').to.eql('Иван Петров');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"friend@mail3.ru\",\n  \"name\": \"Иван Петров\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/admin/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "запрос на добавление в друзья от юзера 1 к юзеру 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(201); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Test 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Test 'email' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('email');",
+									"});",
+									"pm.test(\"Test 'friendship' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('friendship');",
+									"});",
+									"pm.test(\"Test 'friendship.friend.id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.friendship[0].friend.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Test 'friendship.eventVisitSubscriber' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.friendship[0].eventVisitSubscriber, '\"eventVisitSubscriber\"  must be \"false\"').to.eql(false);",
+									"});",
+									"pm.test(\"Test 'friendship.eventPublishSubscriber' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.friendship[0].eventPublishSubscriber, '\"eventPublishSubscriber\"  must be \"false\"').to.eql(false);",
+									"});",
+									"pm.test(\"Test 'friendship.friendStatus' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.friendship[0].friendStatus, '\"friendStatus\"  must be \"REQUEST_SENT\"').to.eql('REQUEST_SENT');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users/1/friend/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"1",
+								"friend",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "запрос на добавление в друзья от юзера 3 к юзеру 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(201); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Test 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Test 'email' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('email');",
+									"});",
+									"pm.test(\"Test 'friendship' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('friendship');",
+									"});",
+									"pm.test(\"Test 'friendship.friend.id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.friendship[0].friend.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Test 'friendship.eventVisitSubscriber' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.friendship[0].eventVisitSubscriber, '\"eventVisitSubscriber\"  must be \"false\"').to.eql(false);",
+									"});",
+									"pm.test(\"Test 'friendship.eventPublishSubscriber' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.friendship[0].eventPublishSubscriber, '\"eventPublishSubscriber\"  must be \"false\"').to.eql(false);",
+									"});",
+									"pm.test(\"Test 'friendship.friendStatus' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.friendship[0].friendStatus, '\"friendStatus\"  must be \"REQUEST_SENT\"').to.eql('CONFIRMED');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users/3/friend/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"3",
+								"friend",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "подписка пользователя 1 на посещение событий пользователя 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(201); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Test 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Test 'email' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('email');",
+									"});",
+									"pm.test(\"Test user 'friendship' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('friendship');",
+									"});",
+									"pm.test(\"Test 'friendship.friend.id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.friendship[0].friend.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Test 'friendship.eventVisitSubscriber' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.friendship[0].eventVisitSubscriber, '\"eventVisitSubscriber\"  must be \"false\"').to.eql(false);",
+									"});",
+									"pm.test(\"Test 'friendship.eventPublishSubscriber' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.friendship[0].eventPublishSubscriber, '\"eventPublishSubscriber\"  must be \"false\"').to.eql(false);",
+									"});",
+									"pm.test(\"Test 'friendship.friendStatus' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.friendship[0].friendStatus, '\"friendStatus\"  must be \"CONFIRMED\"').to.eql('CONFIRMED');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users/1/subscribe/event/visits/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"1",
+								"subscribe",
+								"event",
+								"visits",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "подписка пользователя 1 на новые события пользователя 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(400); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users/1/subscribe/event/published/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"1",
+								"subscribe",
+								"event",
+								"published",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "добавить категорию 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(201); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Test category 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Test category 'name' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData.name, '\"email\" must be \"Концерты\"').to.eql('Концерты');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Концерты\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/admin/categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "добавить ивент 1 пользователем 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(201); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Test user 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData).to.have.property('title');",
+									"    pm.expect(jsonData).to.have.property('annotation');",
+									"    pm.expect(jsonData).to.have.property('category');",
+									"    pm.expect(jsonData).to.have.property('paid');",
+									"    pm.expect(jsonData).to.have.property('eventDate');",
+									"    pm.expect(jsonData).to.have.property('initiator');",
+									"    pm.expect(jsonData).to.have.property('description');",
+									"    pm.expect(jsonData).to.have.property('participantLimit');",
+									"    pm.expect(jsonData).to.have.property('state');",
+									"    pm.expect(jsonData).to.have.property('createdOn');",
+									"    pm.expect(jsonData).to.have.property('location');",
+									"    pm.expect(jsonData).to.have.property('requestModeration');",
+									"});",
+									"pm.test(\"Test event 'state' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.state, '\"state\"  must be \"PENDING\"').to.eql('PENDING');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"annotation\": \"Сплав на байдарках похож на полет.\",\n  \"category\": 1,\n  \"description\": \"Сплав на байдарках похож на полет. На спокойной воде — это парение. На бурной, порожистой — выполнение фигур высшего пилотажа. И то, и другое дарят чувство обновления, феерические эмоции, яркие впечатления.\",\n  \"eventDate\": \"2023-12-31 15:10:05\",\n  \"location\": {\n    \"lat\": 55.754167,\n    \"lon\": 37.62\n  },\n  \"paid\": true,\n  \"participantLimit\": 10,\n  \"requestModeration\": false,\n  \"title\": \"Сплав на байдарках\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/users/2/events",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"2",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "одобрение публикации ивента 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(200); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Test user 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"",
+									"pm.test(\"Test event 'state' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.state, '\"state\"  must be \"PENDING\"').to.eql('PUBLISHED');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"stateAction\": \"PUBLISH_EVENT\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/admin/events/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"events",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "добавление запроса на участие от юзера 3 в ивенте 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(201); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Test user 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Test user 'showToEventSubscribers' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('showToEventSubscribers');",
+									"    pm.expect(jsonData.showToEventSubscribers, '\"showToEventSubscribers\" must be \"true\"').to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users/3/requests?eventId=1&showToSubscribers=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"3",
+								"requests"
+							],
+							"query": [
+								{
+									"key": "eventId",
+									"value": "1"
+								},
+								{
+									"key": "showToSubscribers",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "добавить ивент 2 пользователем 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(201); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Test user 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData).to.have.property('title');",
+									"    pm.expect(jsonData).to.have.property('annotation');",
+									"    pm.expect(jsonData).to.have.property('category');",
+									"    pm.expect(jsonData).to.have.property('paid');",
+									"    pm.expect(jsonData).to.have.property('eventDate');",
+									"    pm.expect(jsonData).to.have.property('initiator');",
+									"    pm.expect(jsonData).to.have.property('description');",
+									"    pm.expect(jsonData).to.have.property('participantLimit');",
+									"    pm.expect(jsonData).to.have.property('state');",
+									"    pm.expect(jsonData).to.have.property('createdOn');",
+									"    pm.expect(jsonData).to.have.property('location');",
+									"    pm.expect(jsonData).to.have.property('requestModeration');",
+									"});",
+									"pm.test(\"Test event 'state' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.state, '\"state\"  must be \"PENDING\"').to.eql('PENDING');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"annotation\": \"Сплав на байдарках похож на полет.\",\n  \"category\": 1,\n  \"description\": \"Сплав на байдарках похож на полет. На спокойной воде — это парение. На бурной, порожистой — выполнение фигур высшего пилотажа. И то, и другое дарят чувство обновления, феерические эмоции, яркие впечатления.\",\n  \"eventDate\": \"2023-12-31 15:10:05\",\n  \"location\": {\n    \"lat\": 55.754167,\n    \"lon\": 37.62\n  },\n  \"paid\": true,\n  \"participantLimit\": 10,\n  \"requestModeration\": false,\n  \"title\": \"Сплав на байдарках\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/users/2/events",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"2",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "получение юзером 1 списка посещения событий юзера 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(200); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Test list item response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length, 'List length must be 1').to.eql(1);",
+									"});",
+									"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0]).to.have.property('id');",
+									"    pm.expect(jsonData[0]).to.have.property('title');",
+									"    pm.expect(jsonData[0]).to.have.property('annotation');",
+									"    pm.expect(jsonData[0]).to.have.property('category');",
+									"    pm.expect(jsonData[0]).to.have.property('paid');",
+									"    pm.expect(jsonData[0]).to.have.property('eventDate');",
+									"    pm.expect(jsonData[0]).to.have.property('initiator');",
+									"    pm.expect(jsonData[0]).to.have.property('description');",
+									"    pm.expect(jsonData[0]).to.have.property('participantLimit');",
+									"    pm.expect(jsonData[0]).to.have.property('state');",
+									"    pm.expect(jsonData[0]).to.have.property('createdOn');",
+									"    pm.expect(jsonData[0]).to.have.property('location');",
+									"    pm.expect(jsonData[0]).to.have.property('requestModeration');",
+									"});",
+									"pm.test(\"Test event 'state' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].state, '\"state\"  must be \"PUBLISHED\"').to.eql('PUBLISHED');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users/1/events/3/visits",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"1",
+								"events",
+								"3",
+								"visits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "получение юзером 1 списка событий юзера 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", () => {",
+									"    pm.response.to.have.status(400); ",
+									"    pm.response.to.be.withBody; ",
+									"    pm.response.to.be.json;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users/1/events/2/published",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"1",
+								"events",
+								"2",
+								"published"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

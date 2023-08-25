@@ -27,8 +27,9 @@ public class RequestControllerPrivate {
     @ResponseStatus(code = HttpStatus.CREATED)
     public ParticipationRequestDto addRequest(@RequestParam Long eventId,
                                               @PathVariable Long userId,
+                                              @RequestParam(defaultValue = "true") Boolean showToSubscribers,
                                               HttpServletRequest request) {
-        ParticipationRequestDto participationRequestDto = requestService.addRequest(eventId, userId);
+        ParticipationRequestDto participationRequestDto = requestService.addRequest(eventId, userId, showToSubscribers);
         log.info("Отправляется запрос на участие в событии. Эндпоинт {}", request.getRequestURI());
         return participationRequestDto;
     }
